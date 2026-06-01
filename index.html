@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Catálogo online de Lumen Paper: agendas, cuadernos, devocionales y diseños únicos de papelería artesanal."
+    />
+    <title>Lumen Paper | Papelería artesanal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Belleza&family=DM+Serif+Display:ital@0;1&family=Nunito:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-content">
+        <a class="brand" href="#inicio" aria-label="Ir al inicio">
+          <img
+            class="brand-logo"
+            src="assets/img/marca/logo-lumen-paper.png"
+            alt="Logo de Lumen Paper"
+          />
+          <span>Lumen Paper</span>
+        </a>
+
+        <nav class="main-nav" aria-label="Navegación principal">
+          <a href="#inicio">Inicio</a>
+          <a href="#catalogo">Catálogo</a>
+          <a href="#sobre-lumen">Sobre Lumen Paper</a>
+          <a href="#contacto">Contacto</a>
+        </nav>
+
+        <a class="button button-small" id="headerWhatsapp" href="#" target="_blank" rel="noopener">
+          WhatsApp
+        </a>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" id="inicio">
+        <div class="container hero-content">
+          <div class="hero-text">
+            <p class="eyebrow">Papelería artesanal</p>
+            <h1>Organizá tus días con amor y propósito</h1>
+            <p class="hero-description">
+              Agendas, cuadernos, devocionales y detalles pensados para acompañarte
+              todos los días con calidez, orden y belleza.
+            </p>
+            <div class="hero-actions">
+              <a class="button" href="#catalogo">Ver catálogo</a>
+              <a class="button button-secondary" id="heroWhatsapp" href="#" target="_blank" rel="noopener">
+                Consultar por WhatsApp
+              </a>
+            </div>
+          </div>
+
+          <div class="hero-image-wrap" aria-label="Producto destacado de Lumen Paper">
+            <img
+              class="hero-image"
+              src="assets/img/agendas/agenda-diaria-1.png"
+              alt="Agenda artesanal de Lumen Paper"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section class="catalog-section" id="catalogo">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow">Catálogo</p>
+            <h2>Productos de Lumen Paper</h2>
+            <p>
+              Elegí una categoría o mirá todos los productos. Cada consulta se abre
+              directamente en WhatsApp.
+            </p>
+          </div>
+
+          <div class="filters" id="categoryFilters" aria-label="Filtros por categoría"></div>
+          <div class="products-grid" id="productsGrid" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="about-section" id="sobre-lumen">
+        <div class="container about-content">
+          <div>
+            <p class="eyebrow">Sobre Lumen Paper</p>
+            <h2>Papelería hecha con dedicación</h2>
+          </div>
+          <p>
+            Lumen Paper es un emprendimiento de papelería artesanal creado con amor
+            por los detalles y ganas de acompañar la organización diaria. Cada agenda,
+            cuaderno, devocional y diseño especial está pensado para ser útil, lindo y
+            único.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer" id="contacto">
+      <div class="container footer-content">
+        <div>
+          <h2>Lumen Paper</h2>
+          <p>Papelería artesanal para organizar tus días.</p>
+        </div>
+        <ul class="footer-links" aria-label="Redes y contacto">
+          <li><a id="footerWhatsapp" href="#" target="_blank" rel="noopener">WhatsApp: 1127495859</a></li>
+          <li><a href="https://www.instagram.com/lumenpaper.ok" target="_blank" rel="noopener">Instagram: @lumenpaper.ok</a></li>
+          <li><a href="https://www.facebook.com/search/top?q=Lumen%20Paper" target="_blank" rel="noopener">Facebook: Lumen Paper</a></li>
+        </ul>
+      </div>
+      <p class="copyright">© 2026 Lumen Paper. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="data/productos.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
