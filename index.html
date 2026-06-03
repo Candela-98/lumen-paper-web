@@ -3,17 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lumen Paper | Agendas, cuadernos y papelería personalizada</title>
     <meta
       name="description"
-      content="Catálogo online de Lumen Paper: agendas, cuadernos, devocionales y diseños únicos de papelería artesanal."
+      content="Lumen Paper crea agendas, cuadernos, devocionales y diseños personalizados de papelería artesanal. Productos hechos con dedicación para organizar tus días con amor y propósito."
     />
-    <title>Lumen Paper | Papelería artesanal</title>
+    <meta
+      name="keywords"
+      content="Lumen Paper, agendas personalizadas, cuadernos personalizados, papelería artesanal, devocionales personalizados, agendas docentes, agenda diaria"
+    />
+    <meta name="author" content="Lumen Paper" />
+    <meta property="og:title" content="Lumen Paper | Papelería personalizada" />
+    <meta
+      property="og:description"
+      content="Agendas, cuadernos, devocionales y diseños personalizados hechos con amor y dedicación."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="assets/img/marca/logo-lumen-paper.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Belleza&family=DM+Serif+Display:ital@0;1&family=Nunito:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="icon" href="assets/img/marca/logo-lumen-paper.png" type="image/png" />
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
@@ -31,6 +44,8 @@
         <nav class="main-nav" aria-label="Navegación principal">
           <a href="#inicio">Inicio</a>
           <a href="#catalogo">Catálogo</a>
+          <a href="#personaliza">Personalizá</a>
+          <a href="#como-comprar">Cómo comprar</a>
           <a href="#sobre-lumen">Sobre Lumen Paper</a>
           <a href="#contacto">Contacto</a>
         </nav>
@@ -85,6 +100,100 @@
         </div>
       </section>
 
+      <section class="custom-section" id="personaliza">
+        <div class="container custom-content">
+          <div class="custom-text">
+            <p class="eyebrow">Hecho para vos</p>
+            <h2>Personalizá tu producto</h2>
+            <p>
+              En Lumen Paper cada producto puede adaptarse a tu estilo. Podés elegir
+              detalles como el nombre en la tapa, colores, temática, frases especiales
+              o el tipo de interior, según el producto y la disponibilidad.
+            </p>
+            <p>
+              La idea es que tengas una agenda, cuaderno o devocional que sea práctico,
+              lindo y único para vos o para regalar.
+            </p>
+            <a class="button" id="customWhatsapp" href="#" target="_blank" rel="noopener">
+              Consultar personalización
+            </a>
+          </div>
+
+          <div class="custom-options" aria-label="Opciones de personalización">
+            <div class="custom-option">Nombre en la tapa</div>
+            <div class="custom-option">Diseño o temática</div>
+            <div class="custom-option">Color principal</div>
+            <div class="custom-option">Frase especial</div>
+            <div class="custom-option">Tipo de interior</div>
+            <div class="custom-option">Detalles según disponibilidad</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="buy-section" id="como-comprar">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow">Proceso de compra</p>
+            <h2>Cómo comprar</h2>
+            <p>
+              Comprar en Lumen Paper es simple: elegís el producto, consultás los
+              detalles por WhatsApp y coordinamos juntas cada parte del pedido.
+            </p>
+          </div>
+
+          <div class="buy-steps" aria-label="Pasos para comprar en Lumen Paper">
+            <article class="buy-step">
+              <span class="buy-step-number">1</span>
+              <h3>Elegí tu producto</h3>
+              <p>
+                Explorá el catálogo y elegí la agenda, cuaderno, devocional o diseño
+                que más te guste.
+              </p>
+            </article>
+
+            <article class="buy-step">
+              <span class="buy-step-number">2</span>
+              <h3>Personalizalo</h3>
+              <p>
+                Podés consultar por nombre en la tapa, colores, temática, frase
+                especial o detalles personalizados, según disponibilidad.
+              </p>
+            </article>
+
+            <article class="buy-step">
+              <span class="buy-step-number">3</span>
+              <h3>Tocá el botón Comprar</h3>
+              <p>
+                El botón te va a llevar directamente a WhatsApp para que podamos
+                coordinar los detalles de tu pedido.
+              </p>
+            </article>
+
+            <article class="buy-step">
+              <span class="buy-step-number">4</span>
+              <h3>Confirmamos tu pedido</h3>
+              <p>
+                Por WhatsApp definimos diseño, disponibilidad, tiempo de preparación,
+                forma de pago y entrega.
+              </p>
+            </article>
+
+            <article class="buy-step">
+              <span class="buy-step-number">5</span>
+              <h3>Preparación con amor</h3>
+              <p>
+                Tu producto se realiza con dedicación, cuidando cada detalle para que
+                sea especial.
+              </p>
+            </article>
+          </div>
+
+          <a class="button buy-section-button" id="orderWhatsapp" href="#" target="_blank" rel="noopener">
+            Quiero hacer un pedido
+          </a>
+        </div>
+      </section>
+
       <section class="about-section" id="sobre-lumen">
         <div class="container about-content">
           <div>
@@ -115,6 +224,20 @@
       </div>
       <p class="copyright">© 2026 Lumen Paper. Todos los derechos reservados.</p>
     </footer>
+
+    <div class="modal" id="productModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+      <div class="modal-overlay" id="modalOverlay"></div>
+      <div class="modal-panel" role="document">
+        <button class="modal-close" id="modalClose" type="button" aria-label="Cerrar detalle del producto">
+          Cerrar
+        </button>
+        <div class="modal-body" id="modalBody"></div>
+      </div>
+    </div>
+
+    <a class="floating-whatsapp" id="floatingWhatsapp" href="#" target="_blank" rel="noopener" aria-label="Consultar por WhatsApp">
+      WhatsApp
+    </a>
 
     <script src="data/productos.js"></script>
     <script src="js/main.js"></script>
