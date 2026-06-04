@@ -41,18 +41,29 @@
           <span>Lumen Paper</span>
         </a>
 
-        <nav class="main-nav" aria-label="Navegación principal">
+        <button
+          class="nav-toggle"
+          id="navToggle"
+          type="button"
+          aria-label="Abrir menú de navegación"
+          aria-expanded="false"
+          aria-controls="mainNav"
+        >
+          ☰
+        </button>
+
+        <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
           <a href="#inicio">Inicio</a>
           <a href="#catalogo">Catálogo</a>
-          <a href="#personaliza">Personalizá</a>
+          <a href="disenos.html">Diseños</a>
           <a href="#como-comprar">Cómo comprar</a>
-          <a href="#sobre-lumen">Sobre Lumen Paper</a>
+          <a href="#envios">Envíos</a>
           <a href="#contacto">Contacto</a>
+          <button class="nav-cart-button" id="cartOpenButton" type="button">
+            Carrito (<span class="cart-count-inline">0</span>)
+          </button>
+          <a class="nav-whatsapp" id="headerWhatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a>
         </nav>
-
-        <a class="button button-small" id="headerWhatsapp" href="#" target="_blank" rel="noopener">
-          WhatsApp
-        </a>
       </div>
     </header>
 
@@ -90,13 +101,31 @@
             <p class="eyebrow">Catálogo</p>
             <h2>Productos de Lumen Paper</h2>
             <p>
-              Elegí una categoría o mirá todos los productos. Cada consulta se abre
-              directamente en WhatsApp.
+              Elegí una categoría o mirá todos los productos. Al abrir un producto
+              podés elegir tamaño, diseño y cantidad.
             </p>
           </div>
 
           <div class="filters" id="categoryFilters" aria-label="Filtros por categoría"></div>
           <div class="products-grid" id="productsGrid" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="designs-summary-section" id="disenos">
+        <div class="container">
+          <div class="designs-summary">
+            <div>
+              <p class="eyebrow">Opciones para personalizar</p>
+              <h2>Diseños de tapa y contratapa</h2>
+              <p>
+                Tenemos diseños listos para personalizar agendas, cuadernos y
+                devocionales. Podés elegir un diseño cristiano, general o pedir uno
+                personalizado.
+              </p>
+              <p>Todos los diseños pueden adaptarse al producto que quieras.</p>
+            </div>
+            <a class="button" href="disenos.html">Ver diseños</a>
+          </div>
         </div>
       </section>
 
@@ -108,7 +137,7 @@
             <p>
               En Lumen Paper cada producto puede adaptarse a tu estilo. Podés elegir
               detalles como el nombre en la tapa, colores, temática, frases especiales
-              o el tipo de interior, según el producto y la disponibilidad.
+              o el tipo de interior, según el producto y lo que quieras coordinar.
             </p>
             <p>
               La idea es que tengas una agenda, cuaderno o devocional que sea práctico,
@@ -125,7 +154,7 @@
             <div class="custom-option">Color principal</div>
             <div class="custom-option">Frase especial</div>
             <div class="custom-option">Tipo de interior</div>
-            <div class="custom-option">Detalles según disponibilidad</div>
+            <div class="custom-option">Detalles personalizados</div>
           </div>
         </div>
       </section>
@@ -136,8 +165,8 @@
             <p class="eyebrow">Proceso de compra</p>
             <h2>Cómo comprar</h2>
             <p>
-              Comprar en Lumen Paper es simple: elegís el producto, consultás los
-              detalles por WhatsApp y coordinamos juntas cada parte del pedido.
+              Comprar en Lumen Paper es simple: elegís el producto, armás tu carrito y
+              después enviás el pedido completo por WhatsApp.
             </p>
           </div>
 
@@ -156,16 +185,16 @@
               <h3>Personalizalo</h3>
               <p>
                 Podés consultar por nombre en la tapa, colores, temática, frase
-                especial o detalles personalizados, según disponibilidad.
+                especial o detalles personalizados para tu pedido.
               </p>
             </article>
 
             <article class="buy-step">
               <span class="buy-step-number">3</span>
-              <h3>Tocá el botón Comprar</h3>
+              <h3>Agregalo al carrito</h3>
               <p>
-                El botón te va a llevar directamente a WhatsApp para que podamos
-                coordinar los detalles de tu pedido.
+                Elegí tamaño, diseño y cantidad. Después tocá Agregar al carrito
+                para sumar el producto a tu pedido.
               </p>
             </article>
 
@@ -173,8 +202,8 @@
               <span class="buy-step-number">4</span>
               <h3>Confirmamos tu pedido</h3>
               <p>
-                Por WhatsApp definimos diseño, disponibilidad, tiempo de preparación,
-                forma de pago y entrega.
+                Por WhatsApp definimos diseño, tiempo de preparación, forma de pago y
+                entrega.
               </p>
             </article>
 
@@ -191,6 +220,42 @@
           <a class="button buy-section-button" id="orderWhatsapp" href="#" target="_blank" rel="noopener">
             Quiero hacer un pedido
           </a>
+        </div>
+      </section>
+
+      <section class="shipping-section" id="envios">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow">Coordinación del pedido</p>
+            <h2>Envíos y entregas</h2>
+            <p>
+              Los envíos y entregas se coordinan al finalizar la compra por WhatsApp.
+              También podés consultarnos antes de hacer tu pedido usando el botón de
+              WhatsApp.
+            </p>
+            <p>
+              Queremos que recibas tu producto de la forma más cómoda posible, por eso
+              contamos con opciones de entrega sin costo y envío por correo con costo a
+              coordinar.
+            </p>
+          </div>
+
+          <div class="shipping-options">
+            <article class="shipping-card">
+              <h3>Puntos de entrega sin costo</h3>
+              <p>Puntos de entrega: San Miguel y Los Polvorines.</p>
+              <p>Esta opción no tiene costo adicional.</p>
+            </article>
+
+            <article class="shipping-card">
+              <h3>Envío por correo con costo</h3>
+              <p>Correo.</p>
+              <p>
+                El costo y la forma de envío se coordinan con el vendedor según la
+                zona y el pedido.
+              </p>
+            </article>
+          </div>
         </div>
       </section>
 
@@ -235,11 +300,71 @@
       </div>
     </div>
 
+    <div class="add-cart-modal" id="addCartModal" role="dialog" aria-modal="true" aria-labelledby="addCartModalTitle" aria-hidden="true">
+      <div class="add-cart-modal-overlay" id="addCartModalOverlay"></div>
+      <div class="add-cart-modal-panel" role="document">
+        <h2 id="addCartModalTitle">Producto agregado correctamente</h2>
+        <div class="add-cart-modal-actions">
+          <button class="button" id="goToCartButton" type="button">Ir al carrito</button>
+          <button class="button button-secondary" id="keepShoppingButton" type="button">Seguir comprando</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cart-modal" id="cartModal" role="dialog" aria-modal="true" aria-labelledby="cartModalTitle" aria-hidden="true">
+      <div class="cart-modal-overlay" id="cartModalOverlay"></div>
+      <aside class="cart-modal-panel" role="document">
+        <button class="modal-close cart-modal-close" id="cartCloseButton" type="button" aria-label="Cerrar carrito">
+          Cerrar
+        </button>
+        <div class="cart-modal-body">
+          <div class="cart-modal-heading">
+            <p class="eyebrow">Pedido por WhatsApp</p>
+            <h2 id="cartModalTitle">Carrito</h2>
+            <p>Revisá tu pedido antes de enviarlo por WhatsApp.</p>
+          </div>
+
+          <div class="cart-items" id="cartItems" aria-live="polite"></div>
+          <div class="cart-summary" id="cartSummary">
+            <p class="cart-total" id="cartTotal">Total general sin envío: $0</p>
+            <p class="cart-note">
+              El total no incluye envío. La entrega o envío se coordina por WhatsApp.
+            </p>
+            <div class="cart-actions">
+              <button class="button" id="checkoutStartButton" type="button">Finalizar compra</button>
+              <button class="button button-secondary" id="clearCartButton" type="button">
+                Vaciar carrito
+              </button>
+            </div>
+
+            <form class="checkout-form checkout-form-hidden" id="checkoutForm">
+              <h3>Datos para finalizar</h3>
+              <label>
+                Nombre
+                <input type="text" id="customerName" autocomplete="given-name" />
+              </label>
+              <label>
+                Apellido
+                <input type="text" id="customerLastName" autocomplete="family-name" />
+              </label>
+              <label>
+                Teléfono
+                <input type="tel" id="customerPhone" autocomplete="tel" />
+              </label>
+              <p class="form-message" id="checkoutMessage" aria-live="polite"></p>
+              <button class="button" type="submit">Enviar pedido por WhatsApp</button>
+            </form>
+          </div>
+        </div>
+      </aside>
+    </div>
+
     <a class="floating-whatsapp" id="floatingWhatsapp" href="#" target="_blank" rel="noopener" aria-label="Consultar por WhatsApp">
       WhatsApp
     </a>
 
     <script src="data/productos.js"></script>
+    <script src="data/disenos.js"></script>
     <script src="js/main.js"></script>
   </body>
 </html>
