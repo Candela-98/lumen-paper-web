@@ -108,16 +108,20 @@ const detalleCuadernoPersonalizado = {
   ],
   idealPara: "Estudio, trabajo, escritura personal, regalos, cursos o emprendimientos.",
   aclaracion:
-    "Las medidas pueden adaptarse según el modelo. La medida base utilizada es A5, aproximadamente 15 x 21 cm. Los diseños, interiores y cantidad de hojas pueden variar según disponibilidad y pedido personalizado."
+    "Las medidas pueden adaptarse según el modelo. La medida base utilizada es A5, aproximadamente 15 x 21 cm. Los diseños, interiores y cantidad de hojas pueden variar según el pedido personalizado."
 };
 
 const productos = [
   {
-    id: "agenda-club",
-    nombre: "Agenda Club",
+    id: "agenda-colectivero",
+    nombre: "Agenda Colectivero",
     categoria: "Agendas",
     descripcion: "Agenda artesanal con diseño personalizado para organizar actividades, fechas importantes e ideas.",
-    precio: "Consultar precio",
+    precio: "Desde $20.000",
+    preciosPorTamano: {
+      A5: 20000,
+      B5: 25000
+    },
     imagenPrincipal: "assets/img/agendas/agenda-club-1.png",
     imagenes: [
       "assets/img/agendas/agenda-club-1.png",
@@ -135,7 +139,11 @@ const productos = [
     nombre: "Agenda Diaria",
     categoria: "Agendas",
     descripcion: "Agenda pensada para planificar cada día con claridad, calidez y espacio para tus prioridades.",
-    precio: "Consultar precio",
+    precio: "Desde $20.000",
+    preciosPorTamano: {
+      A5: 20000,
+      B5: 25000
+    },
     imagenPrincipal: "assets/img/agendas/agenda-diaria-1.png",
     imagenes: [
       "assets/img/agendas/agenda-diaria-1.png",
@@ -156,7 +164,11 @@ const productos = [
     nombre: "Agenda Docente",
     categoria: "Agendas",
     descripcion: "Agenda artesanal para docentes, ideal para organizar clases, planificaciones y seguimiento diario.",
-    precio: "Consultar precio",
+    precio: "Desde $20.000",
+    preciosPorTamano: {
+      A5: 20000,
+      B5: 25000
+    },
     imagenPrincipal: "assets/img/agendas/agenda-docente-1.png",
     imagenes: [
       "assets/img/agendas/agenda-docente-1.png",
@@ -175,11 +187,15 @@ const productos = [
     ...detalleAgendaDocente
   },
   {
-    id: "cuaderno-a5",
-    nombre: "Cuaderno A5",
+    id: "cuaderno",
+    nombre: "Cuaderno Personalizado",
     categoria: "Cuadernos",
     descripcion: "Cuaderno artesanal en tamaño A5, práctico para apuntes, ideas, estudios y proyectos.",
-    precio: "Consultar precio",
+    precio: "Desde $17.000",
+    preciosPorTamano: {
+      A5: 17000,
+      B5: 22000
+    },
     imagenPrincipal: "assets/img/cuadernos/cuaderno-A5-1.png",
     imagenes: [
       "assets/img/cuadernos/cuaderno-A5-1.png",
@@ -193,11 +209,15 @@ const productos = [
     ...detalleCuadernoEstudiantil
   },
   {
-    id: "devocional-mujer",
-    nombre: "Devocional Mujer",
+    id: "devocional",
+    nombre: "Devocional",
     categoria: "Devocionales",
     descripcion: "Devocional artesanal para acompañar momentos de reflexión, oración y crecimiento personal.",
-    precio: "Consultar precio",
+    precio: "Desde $20.000",
+    preciosPorTamano: {
+      A5: 20000,
+      B5: 25000
+    },
     imagenPrincipal: "assets/img/devocionales/devocional-mujer-1.png",
     imagenes: [
       "assets/img/devocionales/devocional-mujer-1.png",
@@ -216,7 +236,11 @@ const productos = [
     nombre: "Devocional Niño",
     categoria: "Devocionales",
     descripcion: "Devocional infantil con diseño cuidado, pensado para acompañar la fe y los hábitos de los más chicos.",
-    precio: "Consultar precio",
+    precio: "Desde $17.000",
+    preciosPorTamano: {
+      A5: 17000,
+      B5: 22000
+    },
     imagenPrincipal: "assets/img/devocionales/devocional-nino-1.png",
     imagenes: [
       "assets/img/devocionales/devocional-nino-1.png",
@@ -230,11 +254,13 @@ const productos = [
     ...detalleDevocional
   },
   {
-    id: "cancionero",
-    nombre: "Cancionero",
+    id: "disenos-unicos",
+    nombre: "Diseños Personalizados",
     categoria: "Diseños únicos",
-    descripcion: "Diseño artesanal especial para guardar canciones, letras y momentos importantes.",
-    precio: "Consultar precio",
+    descripcion: "Productos artesanales personalizados, creados con detalles únicos para regalar," +
+                 "organizar o acompañar momentos especiales.",
+    precio: "A coordinar",
+    precioAcoordinar: true,
     imagenPrincipal: "assets/img/disenos-unicos/cancionero-1.png",
     imagenes: [
       "assets/img/disenos-unicos/cancionero-1.png",
