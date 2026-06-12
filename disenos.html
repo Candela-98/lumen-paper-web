@@ -33,6 +33,7 @@
             class="brand-logo"
             src="assets/img/marca/logo-lumen-paper.png"
             alt="Logo de Lumen Paper"
+            decoding="async"
           />
           <span>Lumen Paper</span>
         </a>
@@ -75,6 +76,11 @@
 
           <div class="filters" id="designFilters" aria-label="Filtros por diseño"></div>
           <div class="designs-grid designs-grid-compact" id="designsGrid" aria-live="polite"></div>
+          <div class="designs-more">
+            <button class="button button-secondary" id="showMoreDesignsButton" type="button" hidden>
+              Ver más diseños
+            </button>
+          </div>
         </div>
       </section>
     </main>
@@ -112,7 +118,7 @@
         >
           Cerrar
         </button>
-        <img class="design-lightbox-image" id="designLightboxImage" src="" alt="" />
+        <img class="design-lightbox-image" id="designLightboxImage" src="" alt="" decoding="async" />
         <div class="design-lightbox-content">
           <p class="product-category" id="designLightboxCategory"></p>
           <h2 id="designLightboxTitle"></h2>
