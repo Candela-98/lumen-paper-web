@@ -1,12 +1,15 @@
 const WHATSAPP_NUMBER = "5491127495859"; // Cambiar este numero si Lumen Paper usa otro WhatsApp.
 const ALL_CATEGORIES_LABEL = "Todos";
 const CUSTOM_DESIGN_VALUE = "personalizado";
+const DESIGN_BATCH_SIZE = 8;
 const SIZES = {
   A5: "14,8 x 21 cm",
   B5: "18,2 x 25,7 cm"
 };
 
 const cart = [];
+let activeDesignCategory = ALL_CATEGORIES_LABEL;
+let visibleDesignsCount = DESIGN_BATCH_SIZE;
 
 const productsGrid = document.querySelector("#productsGrid");
 const categoryFilters = document.querySelector("#categoryFilters");
@@ -48,6 +51,12 @@ const designLightboxClose = document.querySelector("#designLightboxClose");
 const designLightboxImage = document.querySelector("#designLightboxImage");
 const designLightboxTitle = document.querySelector("#designLightboxTitle");
 const designLightboxCategory = document.querySelector("#designLightboxCategory");
+const showMoreDesignsButton = document.querySelector("#showMoreDesignsButton");
+
+function buildWhatsappUrl(message) {
+  const encodedMessage = encodeURIComponent(message);
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+}
 
 function createWhatsappLink(productName, customMessage) {
   const message = customMessage
@@ -56,7 +65,7 @@ function createWhatsappLink(productName, customMessage) {
     ? `Hola, quiero consultar por el producto ${productName} de Lumen Paper.`
     : "Hola, quiero consultar por los productos de Lumen Paper.";
 
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  return buildWhatsappUrl(message);
 }
 
 function isPriceToCoordinate(product) {
@@ -124,7 +133,7 @@ function createProductCard(product) {
   article.setAttribute("aria-label", `Ver detalle de ${product.nombre}`);
 
   article.innerHTML = `
-    <img class="product-image" src="${product.imagenPrincipal}" alt="${product.nombre}" loading="lazy">
+    <img class="product-image" src="${product.imagenPrincipal}" alt="${product.nombre}" loading="lazy" decoding="async">
     <div class="product-content">
       <p class="product-category">${product.categoria}</p>
       <h3>${product.nombre}</h3>
@@ -217,7 +226,7 @@ function createDesignCard(design) {
   article.setAttribute("role", "button");
   article.setAttribute("aria-label", `Ver diseño ${design.nombre} en grande`);
   article.innerHTML = `
-    <img class="design-image" src="${design.imagen}" alt="${design.nombre}" loading="lazy">
+    <img class="design-image" src="${design.imagen}" alt="${design.nombre}" loading="lazy" decoding="async">
     <div class="design-content">
       <p class="product-category">${design.categoriaDiseno}</p>
       <h3>${design.nombre}</h3>
@@ -236,20 +245,41 @@ function createDesignCard(design) {
   return article;
 }
 
-function renderDesigns(category = ALL_CATEGORIES_LABEL) {
+function getFilteredDesigns(category) {
+  if (typeof disenos === "undefined") {
+    return [];
+  }
+
+  return category === ALL_CATEGORIES_LABEL
+    ? disenos
+    : disenos.filter((design) => design.categoriaDiseno === category);
+}
+
+function updateShowMoreDesignsButton(totalDesigns) {
+  if (!showMoreDesignsButton) {
+    return;
+  }
+
+  const remainingDesigns = totalDesigns - visibleDesignsCount;
+  showMoreDesignsButton.hidden = remainingDesigns <= 0;
+  showMoreDesignsButton.textContent =
+    remainingDesigns > 0 ? `Ver más diseños (${remainingDesigns})` : "Ver más diseños";
+}
+
+function renderDesigns(category = activeDesignCategory) {
   if (!designsGrid || typeof disenos === "undefined") {
     return;
   }
 
-  const filteredDesigns =
-    category === ALL_CATEGORIES_LABEL
-      ? disenos
-      : disenos.filter((design) => design.categoriaDiseno === category);
+  activeDesignCategory = category;
+  const filteredDesigns = getFilteredDesigns(category);
+  const designsToShow = filteredDesigns.slice(0, visibleDesignsCount);
 
   designsGrid.innerHTML = "";
-  filteredDesigns.forEach((design) => {
+  designsToShow.forEach((design) => {
     designsGrid.appendChild(createDesignCard(design));
   });
+  updateShowMoreDesignsButton(filteredDesigns.length);
 }
 
 function renderDesignFilters() {
@@ -273,6 +303,7 @@ function renderDesignFilters() {
       });
 
       button.classList.add("active");
+      visibleDesignsCount = DESIGN_BATCH_SIZE;
       renderDesigns(category);
     });
 
@@ -314,7 +345,7 @@ function createProductGallery(product) {
     .map(
       (image, index) => `
         <button class="modal-thumbnail ${index === 0 ? "active" : ""}" type="button" data-image="${image}">
-          <img src="${image}" alt="${product.nombre} imagen ${index + 1}">
+          <img src="${image}" alt="${product.nombre} imagen ${index + 1}" loading="lazy" decoding="async">
         </button>
       `
     )
@@ -322,7 +353,7 @@ function createProductGallery(product) {
 
   return `
     <div class="modal-gallery">
-      <img class="modal-main-image" id="modalMainImage" src="${product.imagenPrincipal}" alt="${product.nombre}">
+      <img class="modal-main-image" id="modalMainImage" src="${product.imagenPrincipal}" alt="${product.nombre}" decoding="async">
       <div class="modal-thumbnails" aria-label="Imágenes de ${product.nombre}">
         ${thumbnails}
       </div>
@@ -460,6 +491,7 @@ function setupGalleryEvents() {
   thumbnails.forEach((thumbnail) => {
     thumbnail.addEventListener("click", () => {
       mainImage.src = thumbnail.dataset.image;
+      mainImage.alt = thumbnail.querySelector("img").alt;
       thumbnails.forEach((item) => item.classList.remove("active"));
       thumbnail.classList.add("active");
     });
@@ -868,6 +900,13 @@ if (designLightboxClose) {
 
 if (designLightboxOverlay) {
   designLightboxOverlay.addEventListener("click", closeDesignLightbox);
+}
+
+if (showMoreDesignsButton) {
+  showMoreDesignsButton.addEventListener("click", () => {
+    visibleDesignsCount += DESIGN_BATCH_SIZE;
+    renderDesigns(activeDesignCategory);
+  });
 }
 
 document.addEventListener("keydown", (event) => {

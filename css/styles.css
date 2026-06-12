@@ -42,6 +42,7 @@ body {
 
 img {
   display: block;
+  height: auto;
   max-width: 100%;
 }
 
@@ -336,6 +337,8 @@ h3 {
 
 .design-card,
 .product-card {
+  content-visibility: auto;
+  contain-intrinsic-size: 520px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -462,6 +465,16 @@ h3 {
 }
 
 .designs-grid-compact .design-content p:last-child {
+  display: none;
+}
+
+.designs-more {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-xl);
+}
+
+.designs-more .button[hidden] {
   display: none;
 }
 
