@@ -1206,6 +1206,10 @@ h3 {
     font-size: 1.35rem;
   }
 
+  h1 {
+    font-size: clamp(2.25rem, 12vw, 3rem);
+  }
+
   .hero-actions,
   .footer-content {
     flex-direction: column;
