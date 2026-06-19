@@ -1,12 +1,33 @@
 const WHATSAPP_NUMBER = "5491127495859"; // Cambiar este numero si Lumen Paper usa otro WhatsApp.
 const ALL_CATEGORIES_LABEL = "Todos";
 const CUSTOM_DESIGN_VALUE = "personalizado";
+const DESIGN_BATCH_SIZE = 8;
 const SIZES = {
   A5: "14,8 x 21 cm",
   B5: "18,2 x 25,7 cm"
 };
+const DEFAULT_PRODUCT_IMAGE_SIZE = {
+  width: 1086,
+  height: 1448
+};
+const LANDSCAPE_PRODUCT_IMAGE_PATTERNS = [
+  "assets/img/libro-de-recuerdos/",
+  "assets/img/devocionales/devocional-mujer-1a.png",
+  "assets/img/devocionales/devocional-mujer-1b.png",
+  "assets/img/devocionales/devocional-mujer-1c.png",
+  "assets/img/devocionales/devocional-mujer-1d.png",
+  "assets/img/devocionales/devocional-mujer-1e.png",
+  "assets/img/devocionales/devocional-mujer-1f.png",
+  "assets/img/devocionales/devocional-nino-1a.jpeg",
+  "assets/img/devocionales/devocional-nino-1b.jpeg",
+  "assets/img/devocionales/devocional-nino-1c.jpeg",
+  "assets/img/devocionales/devocional-nino-1d.jpeg",
+  "assets/img/devocionales/devocional-nino-1e.jpeg"
+];
 
 const cart = [];
+let activeDesignCategory = ALL_CATEGORIES_LABEL;
+let visibleDesignsCount = DESIGN_BATCH_SIZE;
 
 const productsGrid = document.querySelector("#productsGrid");
 const categoryFilters = document.querySelector("#categoryFilters");
@@ -48,6 +69,12 @@ const designLightboxClose = document.querySelector("#designLightboxClose");
 const designLightboxImage = document.querySelector("#designLightboxImage");
 const designLightboxTitle = document.querySelector("#designLightboxTitle");
 const designLightboxCategory = document.querySelector("#designLightboxCategory");
+const showMoreDesignsButton = document.querySelector("#showMoreDesignsButton");
+
+function buildWhatsappUrl(message) {
+  const encodedMessage = encodeURIComponent(message);
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+}
 
 function createWhatsappLink(productName, customMessage) {
   const message = customMessage
@@ -56,7 +83,7 @@ function createWhatsappLink(productName, customMessage) {
     ? `Hola, quiero consultar por el producto ${productName} de Lumen Paper.`
     : "Hola, quiero consultar por los productos de Lumen Paper.";
 
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  return buildWhatsappUrl(message);
 }
 
 function isPriceToCoordinate(product) {
@@ -91,6 +118,68 @@ function createList(items) {
   `;
 }
 
+function escapeAttribute(value) {
+  return String(value).replace(/[&<>"']/g, (character) => {
+    const entities = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    };
+
+    return entities[character];
+  });
+}
+
+function getImageSize(src) {
+  if (!src) {
+    return null;
+  }
+
+  if (src === "assets/img/marca/logo-lumen-paper.png") {
+    return { width: 2750, height: 2750 };
+  }
+
+  if (src.includes("assets/img/diseno-tapa-contratapa/")) {
+    return { width: 3508, height: 2480 };
+  }
+
+  if (LANDSCAPE_PRODUCT_IMAGE_PATTERNS.some((pattern) => src.startsWith(pattern) || src === pattern)) {
+    return { width: 1448, height: 1086 };
+  }
+
+  if (src.startsWith("assets/img/")) {
+    return DEFAULT_PRODUCT_IMAGE_SIZE;
+  }
+
+  return null;
+}
+
+function getOptimizedImageSrc(src) {
+  if (!src || !src.startsWith("assets/img/") || src.includes("assets/img/optimized/")) {
+    return src;
+  }
+
+  if (src === "assets/img/marca/logo-lumen-paper.png") {
+    return src;
+  }
+
+  return src.replace("assets/img/", "assets/img/optimized/").replace(/\.(png|jpe?g)$/i, ".jpg");
+}
+
+function createImageMarkup({ src, alt, className = "", loading = "lazy", fetchpriority = "auto", id = "" }) {
+  const size = getImageSize(src);
+  const displaySrc = getOptimizedImageSrc(src);
+  const idAttribute = id ? ` id="${escapeAttribute(id)}"` : "";
+  const classAttribute = className ? ` class="${escapeAttribute(className)}"` : "";
+  const sizeAttributes = size ? ` width="${size.width}" height="${size.height}"` : "";
+
+  return `<img${idAttribute}${classAttribute} src="${escapeAttribute(displaySrc)}" alt="${escapeAttribute(
+    alt
+  )}"${sizeAttributes} loading="${loading}" decoding="async" fetchpriority="${fetchpriority}">`;
+}
+
 function getUnitPrice(product, size) {
   if (isPriceToCoordinate(product)) {
     return null;
@@ -115,16 +204,23 @@ function updateCartCounters() {
   });
 }
 
-function createProductCard(product) {
+function createProductCard(product, index = 0) {
   const article = document.createElement("article");
   const hasCoordinatedPrice = isPriceToCoordinate(product);
+  const isPriorityImage = index === 0;
   article.className = "product-card";
   article.tabIndex = 0;
   article.dataset.productId = product.id;
   article.setAttribute("aria-label", `Ver detalle de ${product.nombre}`);
 
   article.innerHTML = `
-    <img class="product-image" src="${product.imagenPrincipal}" alt="${product.nombre}" loading="lazy">
+    ${createImageMarkup({
+      src: product.imagenPrincipal,
+      alt: product.nombre,
+      className: "product-image",
+      loading: isPriorityImage ? "eager" : "lazy",
+      fetchpriority: isPriorityImage ? "high" : "low"
+    })}
     <div class="product-content">
       <p class="product-category">${product.categoria}</p>
       <h3>${product.nombre}</h3>
@@ -168,8 +264,8 @@ function renderProducts(category = ALL_CATEGORIES_LABEL) {
       : productos.filter((product) => product.categoria === category);
 
   productsGrid.innerHTML = "";
-  filteredProducts.forEach((product) => {
-    productsGrid.appendChild(createProductCard(product));
+  filteredProducts.forEach((product, index) => {
+    productsGrid.appendChild(createProductCard(product, index));
   });
 }
 
@@ -210,14 +306,21 @@ function renderCategoryFilters() {
   });
 }
 
-function createDesignCard(design) {
+function createDesignCard(design, index = 0) {
   const article = document.createElement("article");
+  const isPriorityImage = index === 0;
   article.className = "design-card";
   article.tabIndex = 0;
   article.setAttribute("role", "button");
   article.setAttribute("aria-label", `Ver diseño ${design.nombre} en grande`);
   article.innerHTML = `
-    <img class="design-image" src="${design.imagen}" alt="${design.nombre}" loading="lazy">
+    ${createImageMarkup({
+      src: design.imagen,
+      alt: design.nombre,
+      className: "design-image",
+      loading: isPriorityImage ? "eager" : "lazy",
+      fetchpriority: isPriorityImage ? "high" : "low"
+    })}
     <div class="design-content">
       <p class="product-category">${design.categoriaDiseno}</p>
       <h3>${design.nombre}</h3>
@@ -236,20 +339,41 @@ function createDesignCard(design) {
   return article;
 }
 
-function renderDesigns(category = ALL_CATEGORIES_LABEL) {
+function getFilteredDesigns(category) {
+  if (typeof disenos === "undefined") {
+    return [];
+  }
+
+  return category === ALL_CATEGORIES_LABEL
+    ? disenos
+    : disenos.filter((design) => design.categoriaDiseno === category);
+}
+
+function updateShowMoreDesignsButton(totalDesigns) {
+  if (!showMoreDesignsButton) {
+    return;
+  }
+
+  const remainingDesigns = totalDesigns - visibleDesignsCount;
+  showMoreDesignsButton.hidden = remainingDesigns <= 0;
+  showMoreDesignsButton.textContent =
+    remainingDesigns > 0 ? `Ver más diseños (${remainingDesigns})` : "Ver más diseños";
+}
+
+function renderDesigns(category = activeDesignCategory) {
   if (!designsGrid || typeof disenos === "undefined") {
     return;
   }
 
-  const filteredDesigns =
-    category === ALL_CATEGORIES_LABEL
-      ? disenos
-      : disenos.filter((design) => design.categoriaDiseno === category);
+  activeDesignCategory = category;
+  const filteredDesigns = getFilteredDesigns(category);
+  const designsToShow = filteredDesigns.slice(0, visibleDesignsCount);
 
   designsGrid.innerHTML = "";
-  filteredDesigns.forEach((design) => {
-    designsGrid.appendChild(createDesignCard(design));
+  designsToShow.forEach((design, index) => {
+    designsGrid.appendChild(createDesignCard(design, index));
   });
+  updateShowMoreDesignsButton(filteredDesigns.length);
 }
 
 function renderDesignFilters() {
@@ -273,6 +397,7 @@ function renderDesignFilters() {
       });
 
       button.classList.add("active");
+      visibleDesignsCount = DESIGN_BATCH_SIZE;
       renderDesigns(category);
     });
 
@@ -285,8 +410,15 @@ function openDesignLightbox(design) {
     return;
   }
 
-  designLightboxImage.src = design.imagen;
+  designLightboxImage.src = getOptimizedImageSrc(design.imagen);
   designLightboxImage.alt = design.nombre;
+  const imageSize = getImageSize(design.imagen);
+
+  if (imageSize) {
+    designLightboxImage.width = imageSize.width;
+    designLightboxImage.height = imageSize.height;
+  }
+
   designLightboxTitle.textContent = design.nombre;
   designLightboxCategory.textContent = design.categoriaDiseno;
   designLightbox.classList.add("is-open");
@@ -314,7 +446,12 @@ function createProductGallery(product) {
     .map(
       (image, index) => `
         <button class="modal-thumbnail ${index === 0 ? "active" : ""}" type="button" data-image="${image}">
-          <img src="${image}" alt="${product.nombre} imagen ${index + 1}">
+          ${createImageMarkup({
+            src: image,
+            alt: `${product.nombre} imagen ${index + 1}`,
+            loading: index === 0 ? "eager" : "lazy",
+            fetchpriority: index === 0 ? "high" : "low"
+          })}
         </button>
       `
     )
@@ -322,7 +459,14 @@ function createProductGallery(product) {
 
   return `
     <div class="modal-gallery">
-      <img class="modal-main-image" id="modalMainImage" src="${product.imagenPrincipal}" alt="${product.nombre}">
+      ${createImageMarkup({
+        src: product.imagenPrincipal,
+        alt: product.nombre,
+        id: "modalMainImage",
+        className: "modal-main-image",
+        loading: "eager",
+        fetchpriority: "high"
+      })}
       <div class="modal-thumbnails" aria-label="Imágenes de ${product.nombre}">
         ${thumbnails}
       </div>
@@ -459,7 +603,15 @@ function setupGalleryEvents() {
 
   thumbnails.forEach((thumbnail) => {
     thumbnail.addEventListener("click", () => {
-      mainImage.src = thumbnail.dataset.image;
+      mainImage.src = getOptimizedImageSrc(thumbnail.dataset.image);
+      mainImage.alt = thumbnail.querySelector("img").alt;
+      const imageSize = getImageSize(thumbnail.dataset.image);
+
+      if (imageSize) {
+        mainImage.width = imageSize.width;
+        mainImage.height = imageSize.height;
+      }
+
       thumbnails.forEach((item) => item.classList.remove("active"));
       thumbnail.classList.add("active");
     });
@@ -868,6 +1020,13 @@ if (designLightboxClose) {
 
 if (designLightboxOverlay) {
   designLightboxOverlay.addEventListener("click", closeDesignLightbox);
+}
+
+if (showMoreDesignsButton) {
+  showMoreDesignsButton.addEventListener("click", () => {
+    visibleDesignsCount += DESIGN_BATCH_SIZE;
+    renderDesigns(activeDesignCategory);
+  });
 }
 
 document.addEventListener("keydown", (event) => {

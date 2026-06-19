@@ -111,6 +111,69 @@ const detalleCuadernoPersonalizado = {
     "Las medidas pueden adaptarse según el modelo. La medida base utilizada es A5, aproximadamente 15 x 21 cm. Los diseños, interiores y cantidad de hojas pueden variar según el pedido personalizado."
 };
 
+const detalleAgendaPerpetua = {
+  descripcionLarga:
+    "La agenda perpetua personalizada de Lumen Paper está pensada para organizar rutinas, fechas importantes y proyectos sin depender de un año específico. Es una opción práctica y delicada para empezar a usar en cualquier momento, con espacios para planificar, registrar pendientes y acompañarte día a día.",
+  incluye: [
+    "Datos personales",
+    "Fechas importantes",
+    "Objetivos",
+    "Planificador mensual",
+    "Planificador semanal",
+    "Espacios para notas",
+    "Interior perpetuo sin fecha fija"
+  ],
+  medidas: [
+    "Tamaño A5: 15 x 21 cm aprox.",
+    "Encuadernación con espiral/anillado",
+    "Tapa personalizada",
+    "Interior de agenda perpetua"
+  ],
+  idealPara: "Organizar el día a día, planificar metas, estudiar, trabajar o regalar una agenda que puede empezar a usarse en cualquier momento.",
+  aclaracion: ""
+};
+
+const detalleCuadernoPediatrico = {
+  descripcionLarga:
+    "El cuaderno pediátrico personalizado de Lumen Paper está pensado para acompañar controles, registros y datos importantes de los más chicos. Es un producto práctico, tierno y organizado, ideal para tener en un solo lugar información de salud, seguimiento y notas útiles.",
+  incluye: [
+    "Datos personales",
+    "Registros y controles",
+    "Espacios para notas",
+    "Interior pediátrico",
+    "Tapa personalizada"
+  ],
+  medidas: [
+    "Tamaño A5: 15 x 21 cm aprox.",
+    "Encuadernación con espiral/anillado",
+    "Tapa personalizada",
+    "Interior pensado para organización pediátrica"
+  ],
+  idealPara: "Familias, controles pediátricos, seguimiento de información importante o regalos personalizados para bebés y niños.",
+  aclaracion: ""
+};
+
+const detalleLibroDeRecuerdos = {
+  descripcionLarga:
+    "El libro de recuerdos personalizado de Lumen Paper está creado para guardar momentos especiales con un formato delicado y artesanal. Es ideal para registrar etapas, fotos, anécdotas, fechas importantes y detalles que quieras conservar de una manera única.",
+  incluye: [
+    "Tapa personalizada",
+    "Espacios para recuerdos",
+    "Secciones para fotos y anotaciones",
+    "Páginas para fechas importantes",
+    "Detalles personalizados según el modelo"
+  ],
+  medidas: [
+    "Tamaño A5: 15 x 21 cm aprox.",
+    "Encuadernación con espiral/anillado",
+    "Tapa personalizada",
+    "Interior para recuerdos y anotaciones"
+  ],
+  idealPara: "Guardar recuerdos familiares, etapas de crecimiento, momentos especiales, regalos personalizados o fechas importantes.",
+  aclaracion:
+    "Los interiores y detalles pueden variar según el pedido personalizado."
+};
+
 const productos = [
   {
     id: "agenda-colectivero",
@@ -187,6 +250,33 @@ const productos = [
     ...detalleAgendaDocente
   },
   {
+    id: "agenda-perpetua",
+    nombre: "Agenda Perpetua",
+    categoria: "Agendas",
+    descripcion: "Agenda artesanal sin fecha fija, ideal para organizarte y empezar a usar en cualquier momento.",
+    precio: "Desde $20.000",
+    preciosPorTamano: {
+      A5: 20000,
+      B5: 25000
+    },
+    imagenPrincipal: "assets/img/agendas/agenda-perpetua-1.png",
+    imagenes: [
+      "assets/img/agendas/agenda-perpetua-1.png",
+      "assets/img/agendas/agenda-perpetua-1a.png",
+      "assets/img/agendas/agenda-perpetua-1b.png",
+      "assets/img/agendas/agenda-perpetua-1c.png",
+      "assets/img/agendas/agenda-perpetua-1d.png",
+      "assets/img/agendas/agenda-perpetua-1e.png",
+      "assets/img/agendas/agenda-perpetua-1f.png",
+      "assets/img/agendas/agenda-perpetua-1g.png",
+      "assets/img/agendas/agenda-perpetua-1h.png",
+      "assets/img/agendas/agenda-perpetua-1i.png",
+      "assets/img/agendas/agenda-perpetua-1j.png"
+    ],
+    destacado: true,
+    ...detalleAgendaPerpetua
+  },
+  {
     id: "cuaderno",
     nombre: "Cuaderno Personalizado",
     categoria: "Cuadernos",
@@ -207,6 +297,38 @@ const productos = [
     ],
     destacado: false,
     ...detalleCuadernoEstudiantil
+  },
+  {
+    id: "cuaderno-pediatrico",
+    nombre: "Cuaderno Pediátrico",
+    categoria: "Cuadernos",
+    descripcion: "Cuaderno artesanal para organizar registros, controles y datos importantes de los más chicos.",
+    precio: "Desde $17.000",
+    preciosPorTamano: {
+      A5: 17000,
+      B5: 22000
+    },
+    imagenPrincipal: "assets/img/cuaderno-pediatrico/cuaderno-p-1.png",
+    imagenes: [
+      "assets/img/cuaderno-pediatrico/cuaderno-p-1.png",
+      "assets/img/cuaderno-pediatrico/cuaderno-p-1a.png",
+      "assets/img/cuaderno-pediatrico/cuaderno-p-1b.png",
+      "assets/img/cuaderno-pediatrico/cuaderno-p-1c.png",
+      "assets/img/cuaderno-pediatrico/cuaderno-p-1d.png",
+      "assets/img/cuaderno-pediatrico/cuaderno-p-1e.png",
+      "assets/img/cuaderno-pediatrico/cuaderno-p-1f.png",
+      "assets/img/cuaderno-pediatrico/cuaderno-p-1g.png",
+      "assets/img/cuaderno-pediatrico/cuaderno-p-1h.png",
+      "assets/img/cuaderno-pediatrico/cuaderno-p-1i.png",
+      "assets/img/cuaderno-pediatrico/cuaderno-p-1j.png",
+      "assets/img/cuaderno-pediatrico/cuaderno-p-1k.png",
+      "assets/img/cuaderno-pediatrico/cuaderno-p-1l.png",
+      "assets/img/cuaderno-pediatrico/cuaderno-p-1m.png",
+      "assets/img/cuaderno-pediatrico/cuaderno-p-1n.png",
+      "assets/img/cuaderno-pediatrico/cuaderno-p-1o.png"
+    ],
+    destacado: false,
+    ...detalleCuadernoPediatrico
   },
   {
     id: "devocional",
@@ -230,6 +352,35 @@ const productos = [
     ],
     destacado: false,
     ...detalleDevocional
+  },
+  {
+    id: "libro-de-recuerdos",
+    nombre: "Libro de Recuerdos",
+    categoria: "Recuerdos",
+    descripcion: "Libro artesanal personalizado para conservar fotos, anécdotas y momentos especiales.",
+    precio: "Desde $20.000",
+    preciosPorTamano: {
+      A5: 20000,
+      B5: 25000
+    },
+    imagenPrincipal: "assets/img/libro-de-recuerdos/libro-recuerdos-1.png",
+    imagenes: [
+      "assets/img/libro-de-recuerdos/libro-recuerdos-1.png",
+      "assets/img/libro-de-recuerdos/libro-recuerdos-1a.png",
+      "assets/img/libro-de-recuerdos/libro-recuerdos-1b.png",
+      "assets/img/libro-de-recuerdos/libro-recuerdos-1c.png",
+      "assets/img/libro-de-recuerdos/libro-recuerdos-1d.png",
+      "assets/img/libro-de-recuerdos/libro-recuerdos-1e.png",
+      "assets/img/libro-de-recuerdos/libro-recuerdos-1f.png",
+      "assets/img/libro-de-recuerdos/libro-recuerdos-1g.png",
+      "assets/img/libro-de-recuerdos/libro-recuerdos-1h.png",
+      "assets/img/libro-de-recuerdos/libro-recuerdos-1i.png",
+      "assets/img/libro-de-recuerdos/libro-recuerdos-1j.png",
+      "assets/img/libro-de-recuerdos/libro-recuerdos-1k.png",
+      "assets/img/libro-de-recuerdos/libro-recuerdos-1l.png"
+    ],
+    destacado: false,
+    ...detalleLibroDeRecuerdos
   },
   {
     id: "devocional-nino",
