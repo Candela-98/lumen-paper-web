@@ -27,6 +27,7 @@
       rel="stylesheet"
     />
     <link rel="icon" href="assets/img/marca/logo-lumen-paper.png" type="image/png" />
+    <link rel="preload" as="image" href="assets/img/optimized/agendas/agenda-diaria-1.jpg" fetchpriority="high" />
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
@@ -37,6 +38,9 @@
             class="brand-logo"
             src="assets/img/marca/logo-lumen-paper.png"
             alt="Logo de Lumen Paper"
+            width="2750"
+            height="2750"
+            loading="eager"
             decoding="async"
           />
           <span>Lumen Paper</span>
@@ -89,9 +93,13 @@
           <div class="hero-image-wrap" aria-label="Producto destacado de Lumen Paper">
             <img
               class="hero-image"
-              src="assets/img/agendas/agenda-diaria-1.png"
+              src="assets/img/optimized/agendas/agenda-diaria-1.jpg"
               alt="Agenda artesanal de Lumen Paper"
+              width="1086"
+              height="1448"
+              loading="eager"
               decoding="async"
+              fetchpriority="high"
             />
           </div>
         </div>
