@@ -4,7 +4,8 @@ const CUSTOM_DESIGN_VALUE = "personalizado";
 const DESIGN_BATCH_SIZE = 8;
 const SIZES = {
   A5: "14,8 x 21 cm",
-  B5: "18,2 x 25,7 cm"
+  B5: "18,2 x 25,7 cm",
+  Combo: "Cuaderno A5 + Libro B5"
 };
 const DEFAULT_PRODUCT_IMAGE_SIZE = {
   width: 1086,
@@ -186,6 +187,14 @@ function getUnitPrice(product, size) {
   }
 
   return product.preciosPorTamano ? product.preciosPorTamano[size] : null;
+}
+
+function getAvailableSizes(product) {
+  if (!product || !product.preciosPorTamano) {
+    return [];
+  }
+
+  return Object.keys(product.preciosPorTamano);
 }
 
 function getValidQuantity(value) {
@@ -494,6 +503,40 @@ function createDesignOptions() {
   `;
 }
 
+function createSizeOptionsMarkup(product) {
+  const availableSizes = getAvailableSizes(product);
+
+  if (availableSizes.length === 0) {
+    return "";
+  }
+
+  if (availableSizes.length === 1) {
+    const size = availableSizes[0];
+    return `
+          <input type="hidden" name="productSize" value="${escapeAttribute(size)}">
+          <div class="price-box">
+            Tamaño: ${escapeAttribute(size)} - ${escapeAttribute(SIZES[size] || size)}
+          </div>
+    `;
+  }
+
+  return `
+          <fieldset class="option-group">
+            <legend>Elegí el tamaño</legend>
+            ${availableSizes
+              .map(
+                (size, index) => `
+            <label class="radio-option">
+              <input type="radio" name="productSize" value="${escapeAttribute(size)}" ${index === 0 ? "checked" : ""}>
+              <span>${escapeAttribute(size)} - ${escapeAttribute(SIZES[size] || size)}</span>
+            </label>
+              `
+              )
+              .join("")}
+          </fieldset>
+  `;
+}
+
 function createProductOptionsMarkup(product) {
   if (isPriceToCoordinate(product)) {
     return `
@@ -510,17 +553,7 @@ function createProductOptionsMarkup(product) {
 
   return `
         <form class="product-options" id="productOptionsForm">
-          <fieldset class="option-group">
-            <legend>Elegí el tamaño</legend>
-            <label class="radio-option">
-              <input type="radio" name="productSize" value="A5" checked>
-              <span>A5 - ${SIZES.A5}</span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="productSize" value="B5">
-              <span>B5 - ${SIZES.B5}</span>
-            </label>
-          </fieldset>
+          ${createSizeOptionsMarkup(product)}
 
           <label class="select-option">
             Elegí el diseño
@@ -631,7 +664,8 @@ function setupProductOptions(product) {
   const message = document.querySelector("#productOptionMessage");
 
   function getSelectedSize() {
-    return form.querySelector('input[name="productSize"]:checked').value;
+    const selectedSizeInput = form.querySelector('input[name="productSize"]:checked, input[name="productSize"][type="hidden"]');
+    return selectedSizeInput ? selectedSizeInput.value : "";
   }
 
   function updatePricePreview() {

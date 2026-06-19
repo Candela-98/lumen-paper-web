@@ -113,65 +113,106 @@ const detalleCuadernoPersonalizado = {
 
 const detalleAgendaPerpetua = {
   descripcionLarga:
-    "La agenda perpetua personalizada de Lumen Paper está pensada para organizar rutinas, fechas importantes y proyectos sin depender de un año específico. Es una opción práctica y delicada para empezar a usar en cualquier momento, con espacios para planificar, registrar pendientes y acompañarte día a día.",
+    "Organizá tus días, tus metas y tus proyectos a tu ritmo, sin depender de fechas preestablecidas. Su formato perpetuo te permite comenzar a utilizarla en cualquier momento del año, adaptándose a tus necesidades y a tu forma de organizarte.",
   incluye: [
     "Datos personales",
+    "Calendario 2026 / 2027",
+    "Feriados",
     "Fechas importantes",
-    "Objetivos",
-    "Planificador mensual",
+    "Objetivos para este año",
+    "Planificador mensual sin fechas, para comenzar cuando quieras",
     "Planificador semanal",
-    "Espacios para notas",
-    "Interior perpetuo sin fecha fija"
+    "Organización del día a día",
+    "Control de gastos",
+    "Espacios para notas y recordatorios"
   ],
   medidas: [
-    "Tamaño A5: 15 x 21 cm aprox.",
+    "Tamaño A5: 14,8 x 21 cm aprox.",
+    "Tamaño B5: 18,2 x 25,7 cm aprox.",
     "Encuadernación con espiral/anillado",
     "Tapa personalizada",
     "Interior de agenda perpetua"
   ],
-  idealPara: "Organizar el día a día, planificar metas, estudiar, trabajar o regalar una agenda que puede empezar a usarse en cualquier momento.",
+  idealPara: "Organizar días, metas y proyectos sin depender de fechas preestablecidas.",
   aclaracion: ""
 };
 
 const detalleCuadernoPediatrico = {
   descripcionLarga:
-    "El cuaderno pediátrico personalizado de Lumen Paper está pensado para acompañar controles, registros y datos importantes de los más chicos. Es un producto práctico, tierno y organizado, ideal para tener en un solo lugar información de salud, seguimiento y notas útiles.",
+    "La herramienta ideal para llevar un seguimiento organizado de la salud y el crecimiento de tu bebé en un solo lugar. Un cuaderno práctico y personalizado para tener siempre a mano la información más importante del desarrollo de tu bebé.",
   incluye: [
     "Datos personales",
-    "Registros y controles",
-    "Espacios para notas",
-    "Interior pediátrico",
-    "Tapa personalizada"
+    "Calendario nacional de vacunación y registro de vacunas",
+    "Tabla de crecimiento",
+    "Historial médico",
+    "Citas médicas y chequeos",
+    "Control del día y notas médicas adicionales",
+    "Seguimiento de alimentación",
+    "Sueño y rutinas",
+    "Control odontológico"
   ],
   medidas: [
-    "Tamaño A5: 15 x 21 cm aprox.",
+    "90 hojas",
+    "Disponible únicamente en tamaño A5",
+    "Tamaño A5: 14,8 x 21 cm aprox.",
     "Encuadernación con espiral/anillado",
-    "Tapa personalizada",
-    "Interior pensado para organización pediátrica"
+    "Tapa personalizada"
   ],
-  idealPara: "Familias, controles pediátricos, seguimiento de información importante o regalos personalizados para bebés y niños.",
+  idealPara: "Registrar la salud, el crecimiento, las rutinas y los controles médicos del bebé.",
   aclaracion: ""
 };
 
 const detalleLibroDeRecuerdos = {
   descripcionLarga:
-    "El libro de recuerdos personalizado de Lumen Paper está creado para guardar momentos especiales con un formato delicado y artesanal. Es ideal para registrar etapas, fotos, anécdotas, fechas importantes y detalles que quieras conservar de una manera única.",
+    "Un espacio pensado para guardar y revivir los momentos más especiales de los primeros años de tu bebé. También incluye espacios adicionales para fotos y recuerdos, para que cada familia pueda completar su historia de una manera única.",
   incluye: [
-    "Tapa personalizada",
-    "Espacios para recuerdos",
-    "Secciones para fotos y anotaciones",
-    "Páginas para fechas importantes",
-    "Detalles personalizados según el modelo"
+    "Mi nombre",
+    "Dentro de la panza de mamá - Ecografías",
+    "Mi Baby Shower",
+    "Mi nacimiento",
+    "Hola mundo - Así soy",
+    "Mi primer día en casa",
+    "Mi familia",
+    "Mi árbol genealógico",
+    "Mis huellitas",
+    "Mi primer baño",
+    "Mi primera comida",
+    "Mis primeras vacaciones",
+    "Mi primera palabra",
+    "Mi primera sonrisa",
+    "Mi primer paso",
+    "Mi primer diente",
+    "Mi juguete favorito",
+    "Carta de mamá",
+    "Carta de papá",
+    "Espacios adicionales para fotos y recuerdos"
   ],
   medidas: [
-    "Tamaño A5: 15 x 21 cm aprox.",
+    "60 hojas",
+    "Disponible únicamente en tamaño B5",
+    "Tamaño B5: 18,2 x 25,7 cm aprox.",
     "Encuadernación con espiral/anillado",
-    "Tapa personalizada",
-    "Interior para recuerdos y anotaciones"
+    "Tapa personalizada"
   ],
-  idealPara: "Guardar recuerdos familiares, etapas de crecimiento, momentos especiales, regalos personalizados o fechas importantes.",
-  aclaracion:
-    "Los interiores y detalles pueden variar según el pedido personalizado."
+  idealPara: "Guardar emociones, recuerdos y momentos de los primeros años del bebé para siempre.",
+  aclaracion: ""
+};
+
+const detalleComboBebe = {
+  descripcionLarga:
+    "La combinación perfecta para acompañar y conservar cada etapa del crecimiento de tu bebé. Por un lado, podrás registrar controles médicos, vacunas y el seguimiento de su desarrollo. Por otro, guardar fotografías, recuerdos y momentos únicos de sus primeros años.",
+  incluye: [
+    "1 Cuaderno Pediátrico Personalizado (A5 - 90 hojas)",
+    "1 Libro de Recuerdos Personalizado (B5 - 60 hojas)"
+  ],
+  medidas: [
+    "Cuaderno Pediátrico: A5, 90 hojas",
+    "Libro de Recuerdos: B5, 60 hojas",
+    "Tapas personalizadas",
+    "Encuadernación con espiral/anillado"
+  ],
+  idealPara: "Crear recuerdos y mantener organizada toda la información importante del bebé en un solo lugar.",
+  aclaracion: ""
 };
 
 const productos = [
@@ -251,9 +292,9 @@ const productos = [
   },
   {
     id: "agenda-perpetua",
-    nombre: "Agenda Perpetua",
+    nombre: "Agenda Perpetua Personalizada",
     categoria: "Agendas",
-    descripcion: "Agenda artesanal sin fecha fija, ideal para organizarte y empezar a usar en cualquier momento.",
+    descripcion: "Agenda sin fechas preestablecidas para organizar días, metas y proyectos a tu ritmo.",
     precio: "Desde $20.000",
     preciosPorTamano: {
       A5: 20000,
@@ -300,13 +341,12 @@ const productos = [
   },
   {
     id: "cuaderno-pediatrico",
-    nombre: "Cuaderno Pediátrico",
+    nombre: "Cuaderno Pediátrico Personalizado",
     categoria: "Cuadernos",
-    descripcion: "Cuaderno artesanal para organizar registros, controles y datos importantes de los más chicos.",
-    precio: "Desde $17.000",
+    descripcion: "Cuaderno para seguir la salud, el crecimiento, vacunas y rutinas de tu bebé.",
+    precio: "$20.000",
     preciosPorTamano: {
-      A5: 17000,
-      B5: 22000
+      A5: 20000
     },
     imagenPrincipal: "assets/img/cuaderno-pediatrico/cuaderno-p-1.png",
     imagenes: [
@@ -355,13 +395,12 @@ const productos = [
   },
   {
     id: "libro-de-recuerdos",
-    nombre: "Libro de Recuerdos",
+    nombre: "Libro de Recuerdos Personalizado",
     categoria: "Recuerdos",
-    descripcion: "Libro artesanal personalizado para conservar fotos, anécdotas y momentos especiales.",
-    precio: "Desde $20.000",
+    descripcion: "Libro para guardar fotos, recuerdos y momentos especiales de los primeros años de tu bebé.",
+    precio: "$35.000",
     preciosPorTamano: {
-      A5: 20000,
-      B5: 25000
+      B5: 35000
     },
     imagenPrincipal: "assets/img/libro-de-recuerdos/libro-recuerdos-1.png",
     imagenes: [
@@ -381,6 +420,27 @@ const productos = [
     ],
     destacado: false,
     ...detalleLibroDeRecuerdos
+  },
+  {
+    id: "combo-bebe",
+    nombre: "Combo Bebé",
+    categoria: "Combos",
+    descripcion: "Combo con cuaderno pediátrico y libro de recuerdos para acompañar el crecimiento de tu bebé.",
+    precio: "$48.000",
+    preciosPorTamano: {
+      Combo: 48000
+    },
+    imagenPrincipal: "assets/img/cuaderno-pediatrico/cuaderno-p-1.png",
+    imagenes: [
+      "assets/img/cuaderno-pediatrico/cuaderno-p-1.png",
+      "assets/img/libro-de-recuerdos/libro-recuerdos-1.png",
+      "assets/img/cuaderno-pediatrico/cuaderno-p-1a.png",
+      "assets/img/libro-de-recuerdos/libro-recuerdos-1a.png",
+      "assets/img/cuaderno-pediatrico/cuaderno-p-1b.png",
+      "assets/img/libro-de-recuerdos/libro-recuerdos-1b.png"
+    ],
+    destacado: false,
+    ...detalleComboBebe
   },
   {
     id: "devocional-nino",
