@@ -178,5 +178,35 @@ const disenos = [
     nombre: "30 - Garfield",
     categoriaDiseno: "Generales",
     imagen: "assets/img/diseno-tapa-contratapa/generales/016-garfield.png"
+  },
+  {
+    id: "bebe-1",
+    nombre: "31 - Winnie the Pooh y Tigger",
+    categoriaDiseno: "Bebes",
+    imagen: "assets/img/diseno-tapa-contratapa/bebes/bebe-1.png"
+  },
+  {
+    id: "bebe-1a",
+    nombre: "32 - Avengers",
+    categoriaDiseno: "Bebes",
+    imagen: "assets/img/diseno-tapa-contratapa/bebes/bebe-1a.png"
+  },
+  {
+    id: "bebe-1b",
+    nombre: "33 - Animalitos de la selva",
+    categoriaDiseno: "Bebes",
+    imagen: "assets/img/diseno-tapa-contratapa/bebes/bebe-1b.png"
+  },
+  {
+    id: "bebe-1c",
+    nombre: "34 - Dinos",
+    categoriaDiseno: "Bebes",
+    imagen: "assets/img/diseno-tapa-contratapa/bebes/bebe-1c.png"
+  },
+  {
+    id: "bebe-1d",
+    nombre: "35 - Astronautas",
+    categoriaDiseno: "Bebes",
+    imagen: "assets/img/diseno-tapa-contratapa/bebes/bebe-1d.png"
   }
 ];

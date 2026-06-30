@@ -8,12 +8,12 @@ El sitio estático de Lumen Paper tiene:
 - Hero principal.
 - Recuadro resumido de diseños debajo del catálogo.
 - Página `disenos.html` con galería completa de diseños de tapa y contratapa.
-- Filtros de diseños por `Todos`, `Cristianos` y `Generales`.
+- Filtros de diseños por `Todos`, `Cristianos`, `Generales` y `Bebes`.
 - Modal para ver cada diseño en grande.
 - Catálogo dinámico.
 - Modal de detalle de producto con galería.
 - Selección de tamaño A5 o B5.
-- Select de diseño con todos los diseños cargados.
+- Select de diseño con los diseños permitidos para cada producto.
 - Opción `Diseño personalizado`.
 - Selección de cantidad.
 - Precio unitario y total por producto.
@@ -22,6 +22,7 @@ El sitio estático de Lumen Paper tiene:
 - Subtotal por producto y total general sin envío.
 - Formulario de nombre, apellido y teléfono visible solo después de tocar `Finalizar compra`.
 - Finalización del pedido por WhatsApp.
+- Limpieza automática del formulario después de enviar el pedido por WhatsApp.
 - Sección `Personalizá tu producto`.
 - Sección `Cómo comprar`.
 - Sección `Envíos y entregas`.
@@ -43,10 +44,12 @@ El sitio estático de Lumen Paper tiene:
 - No se agregó backend.
 - No se agregó pasarela de pago.
 - No se usa `localStorage`; el carrito dura mientras la página está abierta.
-- Todos los diseños pueden usarse para cualquier producto.
-- La categoría de diseño solo ordena visualmente la galería y el select.
+- Como regla general, todos los diseños pueden usarse para cualquier producto.
+- Cuaderno Pediátrico, Libro de Recuerdos y Combo Bebé muestran solo diseños de la categoría `Bebes`.
+- La categoría de diseño ordena visualmente la galería y permite limitar el select de productos infantiles.
 - El total general siempre se muestra sin envío.
 - La entrega o envío se coordina por WhatsApp.
+- El carrito no se vacía automáticamente después de enviar el pedido; conserva el comportamiento manual con `Vaciar carrito`.
 - El color principal sigue siendo `#4cb1b1`.
 - `Diseños Personalizados` no entra al carrito porque su precio depende del pedido y se coordina por WhatsApp.
 
@@ -119,6 +122,15 @@ El sitio estático de Lumen Paper tiene:
 - Se cambió el botón de ese producto a `Consultar por WhatsApp`.
 - Se evitó que ese producto calcule total o se agregue al carrito.
 - Se mantuvo el flujo normal de carrito para los productos con precio por tamaño.
+
+### Sesión 10
+
+- Se agregó la categoría `Bebes` para diseños de bebés o cuadernos pediátricos.
+- Se incorporaron las imágenes de `assets/img/diseno-tapa-contratapa/bebes/`.
+- Se agregaron las versiones optimizadas en `assets/img/optimized/diseno-tapa-contratapa/bebes/`.
+- Se ajustaron filtros y select de diseños para tomar las categorías desde `data/disenos.js`.
+- Se limpió automáticamente el formulario de datos después de abrir WhatsApp con el pedido.
+- Se limitó el selector de diseño de Cuaderno Pediátrico, Libro de Recuerdos y Combo Bebé para mostrar solo diseños `Bebes`.
 
 ## Próximas tareas sugeridas
 
