@@ -1,6 +1,8 @@
 const WHATSAPP_NUMBER = "5491127495859"; // Cambiar este numero si Lumen Paper usa otro WhatsApp.
 const ALL_CATEGORIES_LABEL = "Todos";
 const CUSTOM_DESIGN_VALUE = "personalizado";
+const BABY_DESIGN_CATEGORY = "Bebes";
+const BABY_DESIGN_ONLY_PRODUCT_IDS = ["cuaderno-pediatrico", "libro-de-recuerdos", "combo-bebe"];
 const DESIGN_BATCH_SIZE = 8;
 const SIZES = {
   A5: "14,8 x 21 cm",
@@ -358,6 +360,31 @@ function getFilteredDesigns(category) {
     : disenos.filter((design) => design.categoriaDiseno === category);
 }
 
+function getDesignCategories() {
+  if (typeof disenos === "undefined") {
+    return [ALL_CATEGORIES_LABEL];
+  }
+
+  const categories = disenos.map((design) => design.categoriaDiseno);
+  return [ALL_CATEGORIES_LABEL, ...new Set(categories)];
+}
+
+function isBabyDesignOnlyProduct(product) {
+  return Boolean(product && BABY_DESIGN_ONLY_PRODUCT_IDS.includes(product.id));
+}
+
+function getDesignsForProduct(product) {
+  if (typeof disenos === "undefined") {
+    return [];
+  }
+
+  if (isBabyDesignOnlyProduct(product)) {
+    return disenos.filter((design) => design.categoriaDiseno === BABY_DESIGN_CATEGORY);
+  }
+
+  return disenos;
+}
+
 function updateShowMoreDesignsButton(totalDesigns) {
   if (!showMoreDesignsButton) {
     return;
@@ -390,7 +417,7 @@ function renderDesignFilters() {
     return;
   }
 
-  [ALL_CATEGORIES_LABEL, "Cristianos", "Generales"].forEach((category) => {
+  getDesignCategories().forEach((category) => {
     const button = document.createElement("button");
     button.className = "filter-button";
     button.type = "button";
@@ -483,23 +510,25 @@ function createProductGallery(product) {
   `;
 }
 
-function createDesignOptions() {
-  const cristianos = disenos.filter((design) => design.categoriaDiseno === "Cristianos");
-  const generales = disenos.filter((design) => design.categoriaDiseno === "Generales");
+function createDesignOptions(product) {
+  const availableDesigns = getDesignsForProduct(product);
+  const categories = [...new Set(availableDesigns.map((design) => design.categoriaDiseno))];
+  const customDesignOption = isBabyDesignOnlyProduct(product)
+    ? ""
+    : `<option value="${CUSTOM_DESIGN_VALUE}">Diseño personalizado</option>`;
 
   return `
     <option value="">Seleccionar diseño</option>
-    <option value="${CUSTOM_DESIGN_VALUE}">Diseño personalizado</option>
-    <optgroup label="Cristianos">
-      ${cristianos
-        .map((design) => `<option value="${design.id}">${design.nombre}</option>`)
-        .join("")}
-    </optgroup>
-    <optgroup label="Generales">
-      ${generales
-        .map((design) => `<option value="${design.id}">${design.nombre}</option>`)
-        .join("")}
-    </optgroup>
+    ${customDesignOption}
+    ${categories
+      .map((category) => {
+        const categoryDesigns = availableDesigns.filter((design) => design.categoriaDiseno === category);
+        return `
+    <optgroup label="${category}">
+      ${categoryDesigns.map((design) => `<option value="${design.id}">${design.nombre}</option>`).join("")}
+    </optgroup>`;
+      })
+      .join("")}
   `;
 }
 
@@ -558,7 +587,7 @@ function createProductOptionsMarkup(product) {
           <label class="select-option">
             Elegí el diseño
             <select id="productDesign">
-              ${createDesignOptions()}
+              ${createDesignOptions(product)}
             </select>
           </label>
 
@@ -960,6 +989,7 @@ function setupCheckout() {
     }
 
     window.open(createWhatsappLink("", buildOrderMessage(customerData)), "_blank", "noopener");
+    checkoutForm.reset();
   });
 
   clearCartButton.addEventListener("click", () => {

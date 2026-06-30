@@ -21,10 +21,11 @@ Los diseños están separados en carpetas solo para ordenar:
 
 - `assets/img/diseno-tapa-contratapa/cristianos/`
 - `assets/img/diseno-tapa-contratapa/generales/`
+- `assets/img/diseno-tapa-contratapa/bebes/`
 
-Esa separación no limita el uso. Cualquier diseño puede elegirse para agenda, cuaderno, devocional u otro producto.
+Esa separación ordena la galería y el selector. Como regla general, cualquier diseño puede elegirse para agenda, cuaderno, devocional u otro producto.
 
-La home muestra solo un resumen de diseños debajo del catálogo. La grilla completa vive en `disenos.html`, toma los datos desde `data/disenos.js` y permite filtrar por `Todos`, `Cristianos` y `Generales`. Al tocar una card se abre un lightbox simple con la imagen grande, nombre y categoría.
+La home muestra solo un resumen de diseños debajo del catálogo. La grilla completa vive en `disenos.html`, toma los datos desde `data/disenos.js` y permite filtrar por `Todos` y por las categorías cargadas, actualmente `Cristianos`, `Generales` y `Bebes`. Al tocar una card se abre un lightbox simple con la imagen grande, nombre y categoría.
 
 `data/disenos.js` expone un array llamado `disenos`. Cada objeto tiene:
 
@@ -61,7 +62,9 @@ Al tocar una card se abre el modal. El orden del contenido es:
 7. Botón `Agregar al carrito`.
 8. Descripción, incluye, medidas, ideal para y aclaración.
 
-El select de diseño muestra `Diseño personalizado` y todos los diseños cargados, agrupados por `Cristianos` y `Generales`.
+El select de diseño muestra `Diseño personalizado` y todos los diseños cargados, agrupados por las categorías disponibles en `data/disenos.js`.
+
+Los productos infantiles `cuaderno-pediatrico`, `libro-de-recuerdos` y `combo-bebe` son una excepción: muestran únicamente diseños de la categoría `Bebes`, cargados desde `assets/img/diseno-tapa-contratapa/bebes/`.
 
 Cuando el producto se agrega correctamente, aparece un aviso centrado con `Producto agregado correctamente`. Desde ese aviso se puede abrir el carrito o volver al catálogo para seguir comprando.
 
@@ -76,6 +79,8 @@ En la home no hay una sección fija de carrito. El acceso aparece como botón de
 Cada item guarda producto, categoría, tamaño, medida, diseño, categoría del diseño, cantidad, precio unitario y subtotal. El total general suma todos los subtotales y siempre se muestra como total sin envío.
 
 El formulario de nombre, apellido y teléfono aparece recién cuando el cliente toca `Finalizar compra` dentro del panel.
+
+Después de enviar el pedido por WhatsApp, el formulario se limpia automáticamente para quedar listo para un nuevo pedido. El carrito permanece con su comportamiento actual y solo se vacía cuando el cliente toca `Vaciar carrito`.
 
 ## WhatsApp
 

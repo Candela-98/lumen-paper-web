@@ -21,7 +21,7 @@ Abrir `index.html` en el navegador. No hace falta instalar dependencias ni usar 
 - Home orientada primero al catálogo de productos.
 - Recuadro resumido de diseños debajo del catálogo.
 - Página `disenos.html` con todos los diseños de tapa y contratapa.
-- Filtros visuales de diseños: `Todos`, `Cristianos` y `Generales`.
+- Filtros visuales de diseños: `Todos`, `Cristianos`, `Generales` y `Bebes`.
 - Modal para agrandar una imagen de diseño.
 - Catálogo dinámico con una card por producto.
 - Modal de producto con fotos, tamaño, diseño, cantidad, precio unitario y total.
@@ -30,6 +30,7 @@ Abrir `index.html` en el navegador. No hace falta instalar dependencias ni usar 
 - Carrito simple con subtotal por producto y total general sin envío.
 - Formulario de nombre, apellido y teléfono visible solo después de tocar `Finalizar compra`.
 - Mensaje final a WhatsApp con el pedido completo.
+- Limpieza automática del formulario después de enviar el pedido por WhatsApp.
 - Sección `Envíos y entregas`.
 - Menú hamburguesa en celular.
 - Botón flotante de WhatsApp.
@@ -61,6 +62,12 @@ Para diseños generales, guardar la imagen en:
 
 ```txt
 assets/img/diseno-tapa-contratapa/generales/
+```
+
+Para diseños de bebés o cuadernos pediátricos, guardar la imagen en:
+
+```txt
+assets/img/diseno-tapa-contratapa/bebes/
 ```
 
 Después abrir `data/disenos.js` y agregar un objeto nuevo con `id`, `nombre`, `categoriaDiseno` e `imagen`.

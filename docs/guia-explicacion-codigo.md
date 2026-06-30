@@ -14,12 +14,14 @@ Cada diseño tiene:
 
 - `id`: nombre interno para identificarlo.
 - `nombre`: texto que ve el cliente.
-- `categoriaDiseno`: puede ser `Cristianos` o `Generales`.
+- `categoriaDiseno`: puede ser `Cristianos`, `Generales`, `Bebes` u otra categoría nueva.
 - `imagen`: ruta real de la imagen.
 
 Para agregar un diseño cristiano, guardar la imagen en `assets/img/diseno-tapa-contratapa/cristianos/` y sumar un objeto con `categoriaDiseno: "Cristianos"`.
 
 Para agregar un diseño general, guardar la imagen en `assets/img/diseno-tapa-contratapa/generales/` y sumar un objeto con `categoriaDiseno: "Generales"`.
+
+Para agregar un diseño de bebés o cuadernos pediátricos, guardar la imagen en `assets/img/diseno-tapa-contratapa/bebes/` y sumar un objeto con `categoriaDiseno: "Bebes"`.
 
 ## Página de diseños
 
@@ -27,24 +29,25 @@ La home tiene un resumen de diseños con un botón a `disenos.html`.
 
 En `disenos.html` existe la grilla completa. En `js/main.js`, la función `renderDesigns()` crea las cards usando el array `disenos`.
 
-Los filtros `Todos`, `Cristianos` y `Generales` solo ayudan a mirar la galería. No limitan qué diseño puede usarse para cada producto.
+Los filtros `Todos` y las categorías cargadas solo ayudan a mirar la galería. No limitan qué diseño puede usarse para cada producto.
 
 Al tocar una card de diseño, `openDesignLightbox()` abre un modal simple con imagen grande, nombre y categoría. Se puede cerrar con el botón `Cerrar`, con Escape o tocando el fondo.
 
 ## Productos y diseños
 
-Los productos no tienen una lista propia de diseños. Cuando se abre un producto, el select toma todos los diseños de `data/disenos.js`.
+Los productos no tienen una lista propia de diseños. Cuando se abre un producto, el select toma los diseños permitidos desde `data/disenos.js`.
 
-Esto significa que una agenda, un cuaderno o un devocional pueden usar cualquier diseño.
+Como regla general, una agenda, un cuaderno o un devocional pueden usar cualquier diseño.
+
+Los productos `cuaderno-pediatrico`, `libro-de-recuerdos` y `combo-bebe` están limitados a diseños de la categoría `Bebes`. Esa regla se define en `BABY_DESIGN_ONLY_PRODUCT_IDS` dentro de `js/main.js`.
 
 ## Select de diseño
 
 El select del modal tiene:
 
 - `Seleccionar diseño`
-- `Diseño personalizado`
-- diseños del grupo `Cristianos`
-- diseños del grupo `Generales`
+- `Diseño personalizado`, salvo en productos infantiles limitados a diseños de bebé
+- diseños agrupados por cada `categoriaDiseno` cargada en `data/disenos.js`
 
 Si no se elige diseño, JavaScript muestra un mensaje y no permite agregar al carrito.
 
@@ -134,6 +137,8 @@ El formulario no aparece desde el inicio. Primero el cliente revisa el carrito y
 Si falta un dato o el carrito está vacío, no se abre WhatsApp.
 
 La función `buildOrderMessage()` arma el mensaje final. Después `createWhatsappLink()` usa `encodeURIComponent` para que el texto llegue bien a WhatsApp.
+
+Después de abrir WhatsApp, el formulario se limpia con `checkoutForm.reset()`. El mensaje enviado no cambia porque se arma antes de limpiar los campos, y el carrito conserva su comportamiento actual.
 
 Para `Diseños Personalizados`, `openCoordinatedPriceWhatsapp()` abre WhatsApp con una consulta breve y usa el mismo número configurado en `WHATSAPP_NUMBER`.
 
