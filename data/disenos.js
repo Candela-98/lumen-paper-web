@@ -208,5 +208,23 @@ const disenos = [
     nombre: "35 - Astronautas",
     categoriaDiseno: "Bebes",
     imagen: "assets/img/diseno-tapa-contratapa/bebes/bebe-1d.png"
+  },
+  {
+    id: "036-guitarra-marron",
+    nombre: "36 - Guitarra marron",
+    categoriaDiseno: "Cristianos",
+    imagen: "assets/img/diseno-tapa-contratapa/cristianos/036-guitarra-marron.png"
+  },
+  {
+    id: "037-guitarra-azul",
+    nombre: "37 - Guitarra azul",
+    categoriaDiseno: "Cristianos",
+    imagen: "assets/img/diseno-tapa-contratapa/cristianos/037-guitarra-azul.png"
+  },
+  {
+    id: "038-cruz",
+    nombre: "38 - Cruz",
+    categoriaDiseno: "Cristianos",
+    imagen: "assets/img/diseno-tapa-contratapa/cristianos/038-cruz.png"
   }
 ];

@@ -164,6 +164,14 @@ function getOptimizedImageSrc(src) {
     return src;
   }
 
+  if (
+    src === "assets/img/diseno-tapa-contratapa/cristianos/036-guitarra-marron.png" ||
+    src === "assets/img/diseno-tapa-contratapa/cristianos/037-guitarra-azul.png" ||
+    src === "assets/img/diseno-tapa-contratapa/cristianos/038-cruz.png"
+  ) {
+    return src;
+  }
+
   if (src === "assets/img/marca/logo-lumen-paper.png") {
     return src;
   }
