@@ -41,6 +41,7 @@ Abrir `index.html` en el navegador. No hace falta instalar dependencias ni usar 
 lumen-paper-web/
 ├─ index.html
 ├─ disenos.html
+├─ customHttp.yml
 ├─ README.md
 ├─ css/styles.css
 ├─ js/main.js
@@ -103,3 +104,20 @@ const WHATSAPP_NUMBER = "5491127495859";
 ```
 
 El mensaje final se arma en la función `buildOrderMessage()`.
+
+## Seguridad
+
+El archivo `customHttp.yml` define cabeceras HTTP personalizadas para AWS Amplify. Está ubicado en la raíz del proyecto para que Amplify lo detecte durante el deploy y aplique automáticamente esas cabeceras a las respuestas servidas por el sitio estático.
+
+Estas cabeceras se agregaron para reducir riesgos comunes en sitios web publicados, como carga accidental de recursos no autorizados, uso del sitio dentro de iframes, exposición innecesaria de información de navegación o abuso de permisos del navegador. La política actual permite los recursos propios del sitio y agrega excepciones puntuales para Google Fonts:
+
+- `Strict-Transport-Security`: indica al navegador que use HTTPS para el dominio y sus subdominios durante un año.
+- `X-Content-Type-Options`: evita que el navegador interprete archivos con un tipo distinto al declarado.
+- `X-Frame-Options`: impide que el sitio se cargue dentro de frames o iframes.
+- `Referrer-Policy`: limita la información enviada en el encabezado `Referer` al navegar fuera del sitio.
+- `Permissions-Policy`: deshabilita permisos del navegador que el sitio no usa, como cámara, micrófono, geolocalización, pagos y USB.
+- `Content-Security-Policy`: restringe desde dónde pueden cargarse scripts, estilos, imágenes, fuentes, formularios y otros recursos.
+
+AWS Amplify toma el archivo `customHttp.yml` durante el proceso de publicación y aplica las cabeceras a todas las rutas que coinciden con el patrón `**/*`. No hace falta agregar lógica en HTML, CSS o JavaScript para activarlas.
+
+Si en el futuro se agrega un recurso externo indispensable, primero hay que identificar qué tipo de recurso es y modificar solo la directiva correspondiente de la `Content-Security-Policy`. Por ejemplo, una nueva fuente externa debería agregarse en `font-src` y su hoja de estilos en `style-src`; una API externa debería agregarse en `connect-src`; una imagen remota debería agregarse en `img-src`. Evitar `unsafe-inline` y `unsafe-eval`, salvo que no exista otra alternativa y quede documentado el motivo.

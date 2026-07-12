@@ -546,6 +546,10 @@ h3 {
   display: none;
 }
 
+.cart-summary-hidden {
+  display: none;
+}
+
 .checkout-form label,
 .select-option,
 .quantity-option {
