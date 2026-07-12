@@ -888,14 +888,14 @@ function renderCart() {
     `;
     cartTotal.textContent = "Total general sin envío: $0";
     if (cartSummary) {
-      cartSummary.style.display = "none";
+      cartSummary.classList.add("cart-summary-hidden");
     }
     hideCheckoutForm();
     return;
   }
 
   if (cartSummary) {
-    cartSummary.style.display = "grid";
+    cartSummary.classList.remove("cart-summary-hidden");
   }
 
   hideCheckoutForm();
