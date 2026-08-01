@@ -142,6 +142,9 @@ const detalleCuadernoPediatrico = {
     "La herramienta ideal para llevar un seguimiento organizado de la salud y el crecimiento de tu bebé en un solo lugar. Un cuaderno práctico y personalizado para tener siempre a mano la información más importante del desarrollo de tu bebé.",
   incluye: [
     "Datos personales",
+    "Dos diseños de interior disponibles",
+    "Tapa a elección entre los diseños disponibles",
+    "Diseño interior ilustrado",
     "Calendario nacional de vacunación y registro de vacunas",
     "Tabla de crecimiento",
     "Historial médico",
@@ -149,7 +152,8 @@ const detalleCuadernoPediatrico = {
     "Control del día y notas médicas adicionales",
     "Seguimiento de alimentación",
     "Sueño y rutinas",
-    "Control odontológico"
+    "Control odontológico",
+    "Espacios para registrar controles médicos, vacunas, crecimiento y otros datos importantes"
   ],
   medidas: [
     "90 hojas",
@@ -159,7 +163,14 @@ const detalleCuadernoPediatrico = {
     "Tapa personalizada"
   ],
   idealPara: "Registrar la salud, el crecimiento, las rutinas y los controles médicos del bebé.",
-  aclaracion: ""
+  aclaracion: "Podés consultar las opciones disponibles al enviar el formulario de compra.",
+  disenosDisponibles: {
+    titulo: "Diseños de interior",
+    texto: "Contamos con dos diseños de interior disponibles.",
+    aclaracion: "Podés consultar las opciones disponibles al enviar el formulario de compra.",
+    tapaTexto: "Elegí tu tapa entre nuestros diseños disponibles.",
+    tapaUrl: "disenos.html"
+  }
 };
 
 const detalleLibroDeRecuerdos = {
@@ -196,6 +207,26 @@ const detalleLibroDeRecuerdos = {
   ],
   idealPara: "Guardar emociones, recuerdos y momentos de los primeros años del bebé para siempre.",
   aclaracion: ""
+};
+
+const detalleLibroDeFirmas = {
+  descripcionLarga:
+    "Un libro creado especialmente para conservar las firmas, dedicatorias y recuerdos de las personas más importantes. Cada diseño se personaliza según la temática y las necesidades de la celebración.",
+  incluye: [
+    "Tamaño B5.",
+    "60 hojas.",
+    "Portada personalizada.",
+    "Secciones para familiares y amigos.",
+    "Espacios para fotografías opcionales.",
+    "Diseño personalizado según la temática del evento."
+  ],
+  medidas: [
+    "Tamaño B5: 18,2 x 25,7 cm aprox.",
+    "60 hojas",
+    "Encuadernación con espiral/anillado"
+  ],
+  idealPara: "Conservar firmas, dedicatorias, fotografías y recuerdos de celebraciones especiales.",
+  aclaracion: "El valor puede variar según la personalización solicitada."
 };
 
 const detalleComboBebe = {
@@ -341,7 +372,7 @@ const productos = [
   },
   {
     id: "cuaderno-pediatrico",
-    nombre: "Cuaderno Pediátrico Personalizado",
+    nombre: "Cuaderno pediátrico",
     categoria: "Cuadernos",
     descripcion: "Cuaderno para seguir la salud, el crecimiento, vacunas y rutinas de tu bebé.",
     precio: "$20.000",
@@ -392,6 +423,32 @@ const productos = [
     ],
     destacado: false,
     ...detalleDevocional
+  },
+  {
+    id: "libro-de-firmas",
+    nombre: "Libro de firmas personalizado",
+    categoria: "Libros de firmas",
+    descripcion: "Un recuerdo único para guardar las palabras y los momentos más especiales de ese día.",
+    precio: "Consultar presupuesto",
+    precioAcoordinar: true,
+    consultaWhatsappMensaje: "Hola, quisiera consultar por un Libro de firmas personalizado.",
+    imagenPrincipal: "assets/img/libro-firmas/libro-firmas-1.png",
+    imagenAjuste: "contain",
+    imagenes: [
+      "assets/img/libro-firmas/libro-firmas-1.png",
+      "assets/img/libro-firmas/libro-firmas-1a.png",
+      "assets/img/libro-firmas/libro-firmas-1b.png",
+      "assets/img/libro-firmas/libro-firmas-1c.png",
+      "assets/img/libro-firmas/libro-firmas-1d.png",
+      "assets/img/libro-firmas/libro-firmas-1e.png",
+      "assets/img/libro-firmas/libro-firmas-1f.png",
+      "assets/img/libro-firmas/libro-firmas-1g.png",
+      "assets/img/libro-firmas/libro-firmas-1h.png",
+      "assets/img/libro-firmas/libro-firmas-1i.png",
+      "assets/img/libro-firmas/libro-firmas-1j.png"
+    ],
+    destacado: false,
+    ...detalleLibroDeFirmas
   },
   {
     id: "libro-de-recuerdos",

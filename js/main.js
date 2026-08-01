@@ -14,6 +14,7 @@ const DEFAULT_PRODUCT_IMAGE_SIZE = {
   height: 1448
 };
 const LANDSCAPE_PRODUCT_IMAGE_PATTERNS = [
+  "assets/img/libro-firmas/",
   "assets/img/libro-de-recuerdos/",
   "assets/img/devocionales/devocional-mujer-1a.png",
   "assets/img/devocionales/devocional-mujer-1b.png",
@@ -46,6 +47,7 @@ const cartCloseButton = document.querySelector("#cartCloseButton");
 const checkoutStartButton = document.querySelector("#checkoutStartButton");
 const checkoutForm = document.querySelector("#checkoutForm");
 const checkoutMessage = document.querySelector("#checkoutMessage");
+const checkoutNote = document.querySelector("#checkoutNote");
 const clearCartButton = document.querySelector("#clearCartButton");
 const customerName = document.querySelector("#customerName");
 const customerLastName = document.querySelector("#customerLastName");
@@ -93,7 +95,11 @@ function isPriceToCoordinate(product) {
   return Boolean(product && product.precioAcoordinar);
 }
 
-function getCoordinatedPriceMessage() {
+function getCoordinatedPriceMessage(product) {
+  if (product && product.consultaWhatsappMensaje) {
+    return product.consultaWhatsappMensaje;
+  }
+
   return `Hola, quiero consultar por un diseño personalizado de Lumen Paper.
 
 Me gustaría coordinar un producto especial personalizado.
@@ -101,8 +107,8 @@ Me gustaría coordinar un producto especial personalizado.
 Muchas gracias.`;
 }
 
-function openCoordinatedPriceWhatsapp() {
-  window.open(createWhatsappLink("", getCoordinatedPriceMessage()), "_blank", "noopener");
+function openCoordinatedPriceWhatsapp(product) {
+  window.open(createWhatsappLink("", getCoordinatedPriceMessage(product)), "_blank", "noopener");
 }
 
 function formatPrice(value) {
@@ -118,6 +124,25 @@ function createList(items) {
     <ul>
       ${items.map((item) => `<li>${item}</li>`).join("")}
     </ul>
+  `;
+}
+
+function createAvailableDesignsMarkup(product) {
+  if (!product || !product.disenosDisponibles) {
+    return "";
+  }
+
+  const coverDesignLink = product.disenosDisponibles.tapaUrl
+    ? `<p><a href="${escapeAttribute(product.disenosDisponibles.tapaUrl)}">${product.disenosDisponibles.tapaTexto}</a></p>`
+    : "";
+
+  return `
+        <div class="modal-info-block modal-info-highlight">
+          <h3>${product.disenosDisponibles.titulo}</h3>
+          <p>${product.disenosDisponibles.texto}</p>
+          <p>${product.disenosDisponibles.aclaracion}</p>
+          ${coverDesignLink}
+        </div>
   `;
 }
 
@@ -262,7 +287,7 @@ function createProductCard(product, index = 0) {
   article.querySelector(".product-buy-button").addEventListener("click", (event) => {
     event.stopPropagation();
     if (hasCoordinatedPrice) {
-      openCoordinatedPriceWhatsapp();
+      openCoordinatedPriceWhatsapp(product);
       return;
     }
 
@@ -377,6 +402,13 @@ function getDesignCategories() {
   return [ALL_CATEGORIES_LABEL, ...new Set(categories)];
 }
 
+function normalizeCategory(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+}
+
 function isBabyDesignOnlyProduct(product) {
   return Boolean(product && BABY_DESIGN_ONLY_PRODUCT_IDS.includes(product.id));
 }
@@ -387,7 +419,8 @@ function getDesignsForProduct(product) {
   }
 
   if (isBabyDesignOnlyProduct(product)) {
-    return disenos.filter((design) => design.categoriaDiseno === BABY_DESIGN_CATEGORY);
+    const babyDesignCategory = normalizeCategory(BABY_DESIGN_CATEGORY);
+    return disenos.filter((design) => normalizeCategory(design.categoriaDiseno) === babyDesignCategory);
   }
 
   return disenos;
@@ -486,6 +519,7 @@ function closeDesignLightbox() {
 }
 
 function createProductGallery(product) {
+  const imageFitClass = product.imagenAjuste === "contain" ? " modal-main-image-contain" : "";
   const thumbnails = product.imagenes
     .map(
       (image, index) => `
@@ -507,7 +541,7 @@ function createProductGallery(product) {
         src: product.imagenPrincipal,
         alt: product.nombre,
         id: "modalMainImage",
-        className: "modal-main-image",
+        className: `modal-main-image${imageFitClass}`,
         loading: "eager",
         fetchpriority: "high"
       })}
@@ -588,16 +622,22 @@ function createProductOptionsMarkup(product) {
     `;
   }
 
-  return `
-        <form class="product-options" id="productOptionsForm">
-          ${createSizeOptionsMarkup(product)}
-
+  const designSelectMarkup = product.omitirSeleccionDiseno
+    ? ""
+    : `
           <label class="select-option">
             Elegí el diseño
             <select id="productDesign">
               ${createDesignOptions(product)}
             </select>
           </label>
+    `;
+
+  return `
+        <form class="product-options" id="productOptionsForm">
+          ${createSizeOptionsMarkup(product)}
+
+          ${designSelectMarkup}
 
           <label class="quantity-option">
             Cantidad
@@ -626,6 +666,8 @@ function openProductModal(product) {
         ${createProductOptionsMarkup(product)}
 
         <p class="modal-description">${product.descripcionLarga}</p>
+
+        ${createAvailableDesignsMarkup(product)}
 
         <div class="modal-info-block">
           <h3>Incluye</h3>
@@ -660,7 +702,7 @@ function openProductModal(product) {
   if (isPriceToCoordinate(product)) {
     document
       .querySelector("#coordinatedPriceWhatsapp")
-      .addEventListener("click", openCoordinatedPriceWhatsapp);
+      .addEventListener("click", () => openCoordinatedPriceWhatsapp(product));
     return;
   }
 
@@ -732,7 +774,7 @@ function setupProductOptions(product) {
     message.textContent = "";
 
     const selectedSize = getSelectedSize();
-    const selectedDesignId = designSelect.value;
+    const selectedDesignId = designSelect ? designSelect.value : "";
     const quantity = getValidQuantity(quantityInput.value);
     const unitPrice = getUnitPrice(product, selectedSize);
 
@@ -741,7 +783,7 @@ function setupProductOptions(product) {
       return;
     }
 
-    if (!selectedDesignId) {
+    if (designSelect && !selectedDesignId) {
       message.textContent = "Elegí un diseño para agregar el producto al carrito.";
       return;
     }
@@ -755,13 +797,19 @@ function setupProductOptions(product) {
       selectedDesignId === CUSTOM_DESIGN_VALUE
         ? null
         : disenos.find((design) => design.id === selectedDesignId);
+    const designName = designSelect
+      ? selectedDesign
+        ? selectedDesign.nombre
+        : "Diseño personalizado"
+      : "Diseño a consultar por WhatsApp";
 
     cart.push({
+      productoId: product.id,
       producto: product.nombre,
       categoria: product.categoria,
       tamano: selectedSize,
       medida: SIZES[selectedSize],
-      diseno: selectedDesign ? selectedDesign.nombre : "Diseño personalizado",
+      diseno: designName,
       categoriaDiseno: selectedDesign ? selectedDesign.categoriaDiseno : "",
       cantidad: quantity,
       precioUnitario: unitPrice,
@@ -867,6 +915,10 @@ function hideCheckoutForm() {
   if (checkoutMessage) {
     checkoutMessage.textContent = "";
   }
+
+  if (checkoutNote) {
+    checkoutNote.hidden = true;
+  }
 }
 
 function renderCart() {
@@ -941,6 +993,9 @@ Precio unitario: ${formatPrice(item.precioUnitario)}
 Subtotal: ${formatPrice(item.subtotal)}`
     )
     .join("\n\n");
+  const pediatricDesignsNote = cart.some((item) => item.productoId === "cuaderno-pediatrico")
+    ? "\n\nQuisiera consultar los dos diseños de interior disponibles para el cuaderno pediátrico."
+    : "";
 
   return `Hola, quiero realizar un pedido en Lumen Paper.
 
@@ -951,6 +1006,7 @@ Teléfono: ${customerData.phone}
 
 Pedido:
 ${productsText}
+${pediatricDesignsNote}
 
 Total general sin envío: ${formatPrice(getCartTotal())}
 
@@ -973,6 +1029,9 @@ function setupCheckout() {
     }
 
     checkoutForm.classList.remove("checkout-form-hidden");
+    if (checkoutNote) {
+      checkoutNote.hidden = !cart.some((item) => item.productoId === "cuaderno-pediatrico");
+    }
     customerName.focus();
   });
 
