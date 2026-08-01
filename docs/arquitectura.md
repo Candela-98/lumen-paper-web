@@ -47,7 +47,7 @@ preciosPorTamano: {
 
 JavaScript usa esa propiedad para calcular precio unitario y subtotal.
 
-El producto `disenos-unicos` es un caso especial: representa `Diseños Personalizados`, usa `precio: "A coordinar"` y `precioAcoordinar: true`, y no tiene `preciosPorTamano`. JavaScript detecta esa marca para no calcular precio, no mostrar total y no agregarlo al carrito.
+Los productos con `precioAcoordinar: true` son casos especiales: `Diseños Personalizados` y `Libro de firmas personalizado` no tienen `preciosPorTamano`. JavaScript detecta esa marca para no calcular precio, no mostrar total y no agregarlos al carrito. Si el producto define `consultaWhatsappMensaje`, ese texto se usa para abrir WhatsApp con una consulta específica.
 
 ## Modal de producto
 
@@ -64,11 +64,13 @@ Al tocar una card se abre el modal. El orden del contenido es:
 
 El select de diseño muestra `Diseño personalizado` y todos los diseños cargados, agrupados por las categorías disponibles en `data/disenos.js`.
 
-Los productos infantiles `cuaderno-pediatrico`, `libro-de-recuerdos` y `combo-bebe` son una excepción: muestran únicamente diseños de la categoría `Bebes`, cargados desde `assets/img/diseno-tapa-contratapa/bebes/`.
+Los productos infantiles `libro-de-recuerdos` y `combo-bebe` son una excepción: muestran únicamente diseños de la categoría `Bebes`, cargados desde `assets/img/diseno-tapa-contratapa/bebes/`.
+
+El producto `cuaderno-pediatrico` conserva su precio, carrito normal y selector de tapa basado en los diseños disponibles del sitio. El detalle informa que existen dos diseños de interior disponibles y el cliente puede consultarlos cuando envía el pedido por WhatsApp. Las imágenes de futuros interiores deben convivir en la misma galería del producto para evitar duplicarlo.
 
 Cuando el producto se agrega correctamente, aparece un aviso centrado con `Producto agregado correctamente`. Desde ese aviso se puede abrir el carrito o volver al catálogo para seguir comprando.
 
-Para `Diseños Personalizados`, el modal mantiene fotos, nombre, descripción e información, pero reemplaza las opciones de compra por una aclaración de precio a coordinar y un botón `Consultar por WhatsApp`.
+Para productos con precio a coordinar, el modal mantiene fotos, nombre, descripción e información, pero reemplaza las opciones de compra por una aclaración de precio a coordinar y un botón `Consultar por WhatsApp`.
 
 ## Carrito
 
@@ -86,7 +88,9 @@ Después de enviar el pedido por WhatsApp, el formulario se limpia automáticame
 
 La constante `WHATSAPP_NUMBER` define el número usado por todos los links. La función `buildOrderMessage()` arma el mensaje final con datos del cliente, productos, subtotales, total general sin envío y aclaración de entrega o correo.
 
-Los productos con `precioAcoordinar: true` usan el mismo número de WhatsApp y abren una consulta directa con un mensaje preparado mediante `encodeURIComponent`.
+Los productos con `precioAcoordinar: true` usan el mismo número de WhatsApp y abren una consulta directa con un mensaje preparado mediante `encodeURIComponent`. Cuando se necesita un texto propio, se configura en `consultaWhatsappMensaje` dentro de `data/productos.js`.
+
+Si el carrito contiene `cuaderno-pediatrico`, `buildOrderMessage()` agrega una línea específica para consultar los dos diseños de interior disponibles para el cuaderno pediátrico. Esa línea no aparece para otros productos.
 
 ## Envíos y entregas
 

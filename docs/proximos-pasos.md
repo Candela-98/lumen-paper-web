@@ -17,7 +17,8 @@ El sitio estático de Lumen Paper tiene:
 - Opción `Diseño personalizado`.
 - Selección de cantidad.
 - Precio unitario y total por producto.
-- Producto `Diseños Personalizados` con precio a coordinar y consulta directa por WhatsApp.
+- Cuaderno pediátrico con dos diseños de interior disponibles dentro del mismo producto.
+- Productos con precio a coordinar y consulta directa por WhatsApp.
 - Carrito simple en panel lateral abierto desde el header.
 - Subtotal por producto y total general sin envío.
 - Formulario de nombre, apellido y teléfono visible solo después de tocar `Finalizar compra`.
@@ -38,6 +39,7 @@ El sitio estático de Lumen Paper tiene:
 6. Devocional Niño.
 7. Cancionero.
 8. Diseños Personalizados como producto especial sin precio fijo.
+9. Libro de firmas personalizado como producto de consulta por WhatsApp.
 
 ## Decisiones tomadas
 
@@ -45,13 +47,14 @@ El sitio estático de Lumen Paper tiene:
 - No se agregó pasarela de pago.
 - No se usa `localStorage`; el carrito dura mientras la página está abierta.
 - Como regla general, todos los diseños pueden usarse para cualquier producto.
-- Cuaderno Pediátrico, Libro de Recuerdos y Combo Bebé muestran solo diseños de la categoría `Bebes`.
+- Libro de Recuerdos y Combo Bebé muestran solo diseños de la categoría `Bebes`.
+- Cuaderno pediátrico mantiene un único producto, tapa elegible entre los diseños disponibles y consulta sus dos diseños de interior por WhatsApp al finalizar la compra.
 - La categoría de diseño ordena visualmente la galería y permite limitar el select de productos infantiles.
 - El total general siempre se muestra sin envío.
 - La entrega o envío se coordina por WhatsApp.
 - El carrito no se vacía automáticamente después de enviar el pedido; conserva el comportamiento manual con `Vaciar carrito`.
 - El color principal sigue siendo `#4cb1b1`.
-- `Diseños Personalizados` no entra al carrito porque su precio depende del pedido y se coordina por WhatsApp.
+- Los productos con `precioAcoordinar: true`, como `Diseños Personalizados` y `Libro de firmas personalizado`, no entran al carrito porque su precio depende del pedido y se coordina por WhatsApp.
 
 ## Historial de avances
 
@@ -130,7 +133,25 @@ El sitio estático de Lumen Paper tiene:
 - Se agregaron las versiones optimizadas en `assets/img/optimized/diseno-tapa-contratapa/bebes/`.
 - Se ajustaron filtros y select de diseños para tomar las categorías desde `data/disenos.js`.
 - Se limpió automáticamente el formulario de datos después de abrir WhatsApp con el pedido.
-- Se limitó el selector de diseño de Cuaderno Pediátrico, Libro de Recuerdos y Combo Bebé para mostrar solo diseños `Bebes`.
+- Se limitó el selector de diseño de Libro de Recuerdos y Combo Bebé para mostrar solo diseños `Bebes`.
+
+### Sesión 11
+
+- Se agregó el producto `Libro de firmas personalizado`.
+- Se agregó la categoría de producto `Libros de firmas`.
+- Se cargó la galería desde `assets/img/libro-firmas/` y sus versiones optimizadas en `assets/img/optimized/libro-firmas/`.
+- Se configuró como producto sin precio fijo con `Consultar presupuesto`.
+- Se conectó el botón `Consultar por WhatsApp` con un mensaje específico para consultar por el libro de firmas.
+- Se mantuvo fuera del carrito para que no calcule subtotales ni total.
+
+### Sesión 12
+
+- Se actualizó `Cuaderno pediátrico` para informar que cuenta con dos diseños de interior disponibles.
+- Se agregó una aclaración en el detalle del producto y en el formulario de compra.
+- Se conservó la elección de tapa entre los diseños disponibles del sitio.
+- Se mantuvo el precio y el cálculo normal del carrito.
+- Se agregó una línea condicional al mensaje de WhatsApp cuando el carrito contiene el cuaderno pediátrico.
+- Se documentó dónde agregar imágenes exportadas de futuros diseños de interior sin duplicar el producto.
 
 ## Próximas tareas sugeridas
 
@@ -150,3 +171,5 @@ El sitio estático de Lumen Paper tiene:
 14. Completar datos y revisar el mensaje de WhatsApp.
 15. Probar el menú hamburguesa en celular.
 16. Revisar que `Diseños Personalizados` muestre `A coordinar` y abra WhatsApp sin entrar al carrito.
+17. Revisar que `Libro de firmas personalizado` muestre `Consultar presupuesto`, abra WhatsApp y no se agregue al carrito.
+18. Revisar que `Cuaderno pediátrico` muestre dos diseños de interior disponibles, permita elegir tapa y agregue la consulta de interiores al mensaje de WhatsApp.

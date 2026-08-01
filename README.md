@@ -25,7 +25,8 @@ Abrir `index.html` en el navegador. No hace falta instalar dependencias ni usar 
 - Modal para agrandar una imagen de diseño.
 - Catálogo dinámico con una card por producto.
 - Modal de producto con fotos, tamaño, diseño, cantidad, precio unitario y total.
-- Producto `Diseños Personalizados` con precio a coordinar y consulta directa por WhatsApp.
+- Productos personalizados sin precio fijo, como `Diseños Personalizados` y `Libro de firmas personalizado`, con consulta directa por WhatsApp.
+- Producto `Cuaderno pediátrico` con dos diseños de interior disponibles dentro del mismo producto y tapa a elección entre los diseños disponibles.
 - Botón de carrito en el header con contador y panel lateral.
 - Carrito simple con subtotal por producto y total general sin envío.
 - Formulario de nombre, apellido y teléfono visible solo después de tocar `Finalizar compra`.
@@ -89,11 +90,43 @@ El texto visible de la card está en `precio`, por ejemplo `Desde $20.000`.
 Para un producto sin precio fijo, usar:
 
 ```js
-precio: "A coordinar",
-precioAcoordinar: true
+precio: "Consultar presupuesto",
+precioAcoordinar: true,
+consultaWhatsappMensaje: "Hola, quisiera consultar por un Producto personalizado."
 ```
 
-Ese producto no debe tener `preciosPorTamano`; se consulta por WhatsApp y no se agrega al carrito.
+Ese producto no debe tener `preciosPorTamano`; se consulta por WhatsApp y no se agrega al carrito. Si el producto tiene imágenes apaisadas que deben verse completas en el modal, agregar `imagenAjuste: "contain"`.
+
+## Productos personalizados sin precio fijo
+
+Los productos cuyo valor depende de la personalización se gestionan como consulta directa por WhatsApp. En `data/productos.js` deben tener `precioAcoordinar: true`, un texto visible en `precio` y, si corresponde, un `consultaWhatsappMensaje` específico. JavaScript reutiliza el mismo número configurado en `WHATSAPP_NUMBER`, no muestra precio numérico, no calcula subtotal y no permite agregarlos al carrito.
+
+El producto `Libro de firmas personalizado` usa la categoría `Libros de firmas`, muestra `Consultar presupuesto`, carga sus imágenes desde `assets/img/libro-firmas/` y usa versiones optimizadas en `assets/img/optimized/libro-firmas/`.
+
+## Cuaderno pediátrico con dos diseños de interior
+
+El `Cuaderno pediátrico` sigue siendo un único producto con el mismo precio y el mismo flujo de carrito. La tapa se elige entre los diseños disponibles del sitio, igual que en el resto del flujo de productos personalizables.
+
+La página de detalle informa que hay dos diseños de interior disponibles. Cuando el carrito contiene `cuaderno-pediatrico`, el mensaje final de WhatsApp agrega una línea para consultar esas dos opciones de interior. Ambas opciones pertenecen al mismo producto y no deben cargarse como productos separados.
+
+Para sumar imágenes de futuros diseños de interior del cuaderno pediátrico sin duplicar el producto, guardar las imágenes exportadas en:
+
+```txt
+assets/img/cuaderno-pediatrico/
+assets/img/optimized/cuaderno-pediatrico/
+```
+
+Nombres recomendados para el segundo diseño de animalitos:
+
+```txt
+cuaderno-p-animalitos-1.png
+cuaderno-p-animalitos-1a.png
+cuaderno-p-animalitos-1b.png
+```
+
+Luego agregar esas rutas al array `imagenes` del producto `cuaderno-pediatrico` en `data/productos.js`. No usar el PDF directamente como imagen de catálogo; primero exportar cada página o vista necesaria como imagen.
+
+Archivos relacionados con este comportamiento: `data/productos.js`, `js/main.js`, `index.html`, `css/styles.css` y esta documentación.
 
 ## Cómo cambiar el número o mensaje de WhatsApp
 

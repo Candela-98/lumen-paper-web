@@ -39,7 +39,9 @@ Los productos no tienen una lista propia de diseños. Cuando se abre un producto
 
 Como regla general, una agenda, un cuaderno o un devocional pueden usar cualquier diseño.
 
-Los productos `cuaderno-pediatrico`, `libro-de-recuerdos` y `combo-bebe` están limitados a diseños de la categoría `Bebes`. Esa regla se define en `BABY_DESIGN_ONLY_PRODUCT_IDS` dentro de `js/main.js`.
+Los productos `libro-de-recuerdos` y `combo-bebe` están limitados a diseños de la categoría `Bebes`. Esa regla se define en `BABY_DESIGN_ONLY_PRODUCT_IDS` dentro de `js/main.js`.
+
+El producto `cuaderno-pediatrico` funciona como un único producto con dos diseños de interior disponibles. Mantiene el selector de tapa con los diseños disponibles del sitio; el detalle informa las opciones de interior y el mensaje final de WhatsApp agrega una línea para consultarlas cuando ese producto está en el carrito.
 
 ## Select de diseño
 
@@ -75,14 +77,15 @@ preciosPorTamano: {
 
 La función `getUnitPrice()` busca el precio según el producto y el tamaño elegido.
 
-`Diseños Personalizados` funciona distinto. En `data/productos.js` tiene:
+Los productos personalizados sin precio fijo funcionan distinto. En `data/productos.js` tienen:
 
 ```js
-precio: "A coordinar",
-precioAcoordinar: true
+precio: "Consultar presupuesto",
+precioAcoordinar: true,
+consultaWhatsappMensaje: "Hola, quisiera consultar por un Producto personalizado."
 ```
 
-No tiene `preciosPorTamano`, porque el valor se define por WhatsApp según el pedido. En `js/main.js`, `isPriceToCoordinate()` detecta esa marca para no calcular precio, no mostrar total y no permitir que el producto se agregue al carrito.
+No tienen `preciosPorTamano`, porque el valor se define por WhatsApp según el pedido. En `js/main.js`, `isPriceToCoordinate()` detecta esa marca para no calcular precio, no mostrar total y no permitir que el producto se agregue al carrito. Si existe `consultaWhatsappMensaje`, se usa ese mensaje específico al tocar `Consultar por WhatsApp`.
 
 ## Cantidad, subtotal y total
 
@@ -140,7 +143,7 @@ La función `buildOrderMessage()` arma el mensaje final. Después `createWhatsap
 
 Después de abrir WhatsApp, el formulario se limpia con `checkoutForm.reset()`. El mensaje enviado no cambia porque se arma antes de limpiar los campos, y el carrito conserva su comportamiento actual.
 
-Para `Diseños Personalizados`, `openCoordinatedPriceWhatsapp()` abre WhatsApp con una consulta breve y usa el mismo número configurado en `WHATSAPP_NUMBER`.
+Para productos con precio a coordinar, `openCoordinatedPriceWhatsapp()` abre WhatsApp con una consulta breve y usa el mismo número configurado en `WHATSAPP_NUMBER`.
 
 ## Envíos y entregas
 
@@ -161,7 +164,8 @@ También cambia `aria-expanded` entre `true` y `false`. Cuando el usuario toca u
 
 - Agregar productos: `data/productos.js`.
 - Cambiar precios: `preciosPorTamano` en `data/productos.js`.
-- Marcar un producto sin precio fijo: agregar `precio: "A coordinar"` y `precioAcoordinar: true`, sin `preciosPorTamano`.
+- Marcar un producto sin precio fijo: agregar `precio: "Consultar presupuesto"` y `precioAcoordinar: true`, sin `preciosPorTamano`. Si hace falta un mensaje propio, agregar `consultaWhatsappMensaje`.
+- Agregar imágenes de futuros diseños de interior del cuaderno pediátrico: guardar las imágenes exportadas en `assets/img/cuaderno-pediatrico/`, generar sus versiones en `assets/img/optimized/cuaderno-pediatrico/` y sumar las rutas al array `imagenes` de `cuaderno-pediatrico`. No duplicar el producto ni usar el PDF directamente como imagen.
 - Agregar diseños: `data/disenos.js`.
 - Cambiar textos de secciones: `index.html`.
 - Cambiar estilos: `css/styles.css`.
