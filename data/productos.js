@@ -252,9 +252,9 @@ const productos = [
     nombre: "Agenda Colectivero",
     categoria: "Agendas",
     descripcion: "Agenda artesanal con diseño personalizado para organizar actividades, fechas importantes e ideas.",
-    precio: "Desde $20.000",
+    precio: "Desde $25.000",
     preciosPorTamano: {
-      A5: 20000,
+      A5: 25000,
       B5: 25000
     },
     imagenPrincipal: "assets/img/agendas/agenda-club-1.png",
@@ -274,9 +274,9 @@ const productos = [
     nombre: "Agenda Diaria",
     categoria: "Agendas",
     descripcion: "Agenda pensada para planificar cada día con claridad, calidez y espacio para tus prioridades.",
-    precio: "Desde $20.000",
+    precio: "Desde $25.000",
     preciosPorTamano: {
-      A5: 20000,
+      A5: 25000,
       B5: 25000
     },
     imagenPrincipal: "assets/img/agendas/agenda-diaria-1.png",
@@ -299,10 +299,10 @@ const productos = [
     nombre: "Agenda Docente",
     categoria: "Agendas",
     descripcion: "Agenda artesanal para docentes, ideal para organizar clases, planificaciones y seguimiento diario.",
-    precio: "Desde $20.000",
+    precio: "$28.000",
     preciosPorTamano: {
-      A5: 20000,
-      B5: 25000
+      A5: 28000,
+      B5: 28000
     },
     imagenPrincipal: "assets/img/agendas/agenda-docente-1.png",
     imagenes: [
@@ -326,10 +326,10 @@ const productos = [
     nombre: "Agenda Perpetua Personalizada",
     categoria: "Agendas",
     descripcion: "Agenda sin fechas preestablecidas para organizar días, metas y proyectos a tu ritmo.",
-    precio: "Desde $20.000",
+    precio: "$30.000",
     preciosPorTamano: {
-      A5: 20000,
-      B5: 25000
+      A5: 30000,
+      B5: 30000
     },
     imagenPrincipal: "assets/img/agendas/agenda-perpetua-1.png",
     imagenes: [
@@ -353,10 +353,10 @@ const productos = [
     nombre: "Cuaderno Personalizado",
     categoria: "Cuadernos",
     descripcion: "Cuaderno artesanal en tamaño A5, práctico para apuntes, ideas, estudios y proyectos.",
-    precio: "Desde $17.000",
+    precio: "Desde $20.000",
     preciosPorTamano: {
-      A5: 17000,
-      B5: 22000
+      A5: 20000,
+      B5: 24000
     },
     imagenPrincipal: "assets/img/cuadernos/cuaderno-A5-1.png",
     imagenes: [
