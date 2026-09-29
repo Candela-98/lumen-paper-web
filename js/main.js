@@ -7,7 +7,10 @@ const DESIGN_BATCH_SIZE = 8;
 const SIZES = {
   A5: "14,8 x 21 cm",
   B5: "18,2 x 25,7 cm",
-  Combo: "Cuaderno A5 + Libro B5"
+  Combo: "Cuaderno A5 + Libro B5",
+  Anotador: "12 x 18 cm aprox.",
+  Calendario: "Calendario de escritorio",
+  ComboCalendarioAnotador: "Calendario 2027 + Anotador"
 };
 const DEFAULT_PRODUCT_IMAGE_SIZE = {
   width: 1086,
@@ -27,6 +30,11 @@ const LANDSCAPE_PRODUCT_IMAGE_PATTERNS = [
   "assets/img/devocionales/devocional-nino-1c.jpeg",
   "assets/img/devocionales/devocional-nino-1d.jpeg",
   "assets/img/devocionales/devocional-nino-1e.jpeg"
+];
+const ORIGINAL_PRODUCT_IMAGE_PATTERNS = [
+  "assets/img/anotador/",
+  "assets/img/calendario-2027/",
+  "assets/img/combo-anotador-calendario/"
 ];
 
 const cart = [];
@@ -198,6 +206,10 @@ function getOptimizedImageSrc(src) {
   }
 
   if (src === "assets/img/marca/logo-lumen-paper.png") {
+    return src;
+  }
+
+  if (ORIGINAL_PRODUCT_IMAGE_PATTERNS.some((pattern) => src.startsWith(pattern))) {
     return src;
   }
 
