@@ -157,8 +157,8 @@ const detalleCuadernoPediatrico = {
   ],
   medidas: [
     "90 hojas",
-    "Disponible únicamente en tamaño A5",
     "Tamaño A5: 14,8 x 21 cm aprox.",
+    "Tamaño B5: 18,2 x 25,7 cm aprox.",
     "Encuadernación con espiral/anillado",
     "Tapa personalizada"
   ],
@@ -246,16 +246,63 @@ const detalleComboBebe = {
   aclaracion: ""
 };
 
+const detalleAnotador = {
+  descripcionLarga:
+    "Anotador artesanal de Lumen Paper, pensado para tener siempre a mano un espacio practico para escribir ideas, pendientes, recordatorios o notas del dia a dia.",
+  incluye: [
+    "Anotador de escritorio",
+    "Tapa con diseno Lumen Paper",
+    "Interior para anotaciones"
+  ],
+  medidas: [
+    "Medida aproximada: 12 cm de ancho x 18 cm de alto",
+    "Encuadernacion con espiral/anillado"
+  ],
+  idealPara: "Anotar pendientes, ideas, recordatorios, listas o regalar un detalle practico y lindo.",
+  aclaracion: ""
+};
+
+const detalleCalendario2027 = {
+  descripcionLarga:
+    "Calendario 2027 de escritorio, practico para acompanar la organizacion diaria y tener los meses siempre visibles en el espacio de trabajo, estudio o casa.",
+  incluye: [
+    "1 Calendario 2027",
+    "Formato de escritorio",
+    "Diseno Lumen Paper"
+  ],
+  medidas: [
+    "Calendario de escritorio",
+    "Base de apoyo para escritorio"
+  ],
+  idealPara: "Organizar fechas importantes y tener el calendario a la vista durante todo el ano.",
+  aclaracion: ""
+};
+
+const detalleComboCalendarioAnotador = {
+  descripcionLarga:
+    "Combo de escritorio con calendario 2027 y anotador, pensado para organizar fechas, pendientes e ideas en un mismo set practico.",
+  incluye: [
+    "1 Calendario 2027",
+    "1 Anotador"
+  ],
+  medidas: [
+    "Calendario 2027 de escritorio",
+    "Anotador de 12 cm de ancho x 18 cm de alto aprox."
+  ],
+  idealPara: "Tener un set de organizacion de escritorio o regalar un detalle util y delicado.",
+  aclaracion: ""
+};
+
 const productos = [
   {
     id: "agenda-colectivero",
     nombre: "Agenda Colectivero",
     categoria: "Agendas",
     descripcion: "Agenda artesanal con diseño personalizado para organizar actividades, fechas importantes e ideas.",
-    precio: "Desde $25.000",
+    precio: "Desde $30.000",
     preciosPorTamano: {
-      A5: 25000,
-      B5: 25000
+      A5: 30000,
+      B5: 35000
     },
     imagenPrincipal: "assets/img/agendas/agenda-club-1.png",
     imagenes: [
@@ -274,10 +321,10 @@ const productos = [
     nombre: "Agenda Diaria",
     categoria: "Agendas",
     descripcion: "Agenda pensada para planificar cada día con claridad, calidez y espacio para tus prioridades.",
-    precio: "Desde $25.000",
+    precio: "Desde $30.000",
     preciosPorTamano: {
-      A5: 25000,
-      B5: 25000
+      A5: 30000,
+      B5: 35000
     },
     imagenPrincipal: "assets/img/agendas/agenda-diaria-1.png",
     imagenes: [
@@ -299,10 +346,9 @@ const productos = [
     nombre: "Agenda Docente",
     categoria: "Agendas",
     descripcion: "Agenda artesanal para docentes, ideal para organizar clases, planificaciones y seguimiento diario.",
-    precio: "$28.000",
+    precio: "$32.000",
     preciosPorTamano: {
-      A5: 28000,
-      B5: 28000
+      A5: 32000
     },
     imagenPrincipal: "assets/img/agendas/agenda-docente-1.png",
     imagenes: [
@@ -326,10 +372,10 @@ const productos = [
     nombre: "Agenda Perpetua Personalizada",
     categoria: "Agendas",
     descripcion: "Agenda sin fechas preestablecidas para organizar días, metas y proyectos a tu ritmo.",
-    precio: "$30.000",
+    precio: "Desde $35.000",
     preciosPorTamano: {
-      A5: 30000,
-      B5: 30000
+      A5: 35000,
+      B5: 40000
     },
     imagenPrincipal: "assets/img/agendas/agenda-perpetua-1.png",
     imagenes: [
@@ -353,10 +399,10 @@ const productos = [
     nombre: "Cuaderno Personalizado",
     categoria: "Cuadernos",
     descripcion: "Cuaderno artesanal en tamaño A5, práctico para apuntes, ideas, estudios y proyectos.",
-    precio: "Desde $20.000",
+    precio: "Desde $22.000",
     preciosPorTamano: {
-      A5: 20000,
-      B5: 24000
+      A5: 22000,
+      B5: 26000
     },
     imagenPrincipal: "assets/img/cuadernos/cuaderno-A5-1.png",
     imagenes: [
@@ -375,9 +421,10 @@ const productos = [
     nombre: "Cuaderno pediátrico",
     categoria: "Cuadernos",
     descripcion: "Cuaderno para seguir la salud, el crecimiento, vacunas y rutinas de tu bebé.",
-    precio: "$20.000",
+    precio: "Desde $25.000",
     preciosPorTamano: {
-      A5: 20000
+      A5: 25000,
+      B5: 30000
     },
     imagenPrincipal: "assets/img/cuaderno-pediatrico/cuaderno-p-1.png",
     imagenes: [
@@ -406,10 +453,10 @@ const productos = [
     nombre: "Devocional",
     categoria: "Devocionales",
     descripcion: "Devocional artesanal para acompañar momentos de reflexión, oración y crecimiento personal.",
-    precio: "Desde $20.000",
+    precio: "Desde $25.000",
     preciosPorTamano: {
-      A5: 20000,
-      B5: 25000
+      A5: 25000,
+      B5: 30000
     },
     imagenPrincipal: "assets/img/devocionales/devocional-mujer-1.png",
     imagenes: [
@@ -455,9 +502,9 @@ const productos = [
     nombre: "Libro de Recuerdos Personalizado",
     categoria: "Recuerdos",
     descripcion: "Libro para guardar fotos, recuerdos y momentos especiales de los primeros años de tu bebé.",
-    precio: "$35.000",
+    precio: "$40.000",
     preciosPorTamano: {
-      B5: 35000
+      B5: 40000
     },
     imagenPrincipal: "assets/img/libro-de-recuerdos/libro-recuerdos-1.png",
     imagenes: [
@@ -483,9 +530,9 @@ const productos = [
     nombre: "Combo Bebé",
     categoria: "Combos",
     descripcion: "Combo con cuaderno pediátrico y libro de recuerdos para acompañar el crecimiento de tu bebé.",
-    precio: "$48.000",
+    precio: "$55.000",
     preciosPorTamano: {
-      Combo: 48000
+      Combo: 55000
     },
     imagenPrincipal: "assets/img/cuaderno-pediatrico/cuaderno-p-1.png",
     imagenes: [
@@ -504,10 +551,10 @@ const productos = [
     nombre: "Devocional Niño",
     categoria: "Devocionales",
     descripcion: "Devocional infantil con diseño cuidado, pensado para acompañar la fe y los hábitos de los más chicos.",
-    precio: "Desde $17.000",
+    precio: "Desde $20.000",
     preciosPorTamano: {
-      A5: 17000,
-      B5: 22000
+      A5: 20000,
+      B5: 28000
     },
     imagenPrincipal: "assets/img/devocionales/devocional-nino-1.png",
     imagenes: [
@@ -520,6 +567,65 @@ const productos = [
     ],
     destacado: false,
     ...detalleDevocional
+  },
+  {
+    id: "anotador",
+    nombre: "Anotador",
+    categoria: "Anotadores",
+    descripcion: "Anotador artesanal de 12 x 18 cm aprox., ideal para pendientes, ideas y recordatorios.",
+    precio: "$20.000",
+    preciosPorTamano: {
+      Anotador: 20000
+    },
+    imagenPrincipal: "assets/img/anotador/anotador-1.jpeg",
+    imagenes: [
+      "assets/img/anotador/anotador-1.jpeg",
+      "assets/img/anotador/anotador-1a.jpeg",
+      "assets/img/anotador/anotador-1c.jpeg",
+      "assets/img/anotador/anotador-1d.jpeg"
+    ],
+    omitirSeleccionDiseno: true,
+    destacado: false,
+    ...detalleAnotador
+  },
+  {
+    id: "calendario-2027",
+    nombre: "Calendario 2027",
+    categoria: "Calendarios",
+    descripcion: "Calendario 2027 de escritorio para organizar fechas y acompanar tu espacio de trabajo.",
+    precio: "$15.000",
+    preciosPorTamano: {
+      Calendario: 15000
+    },
+    imagenPrincipal: "assets/img/calendario-2027/Calendario-1.jpeg",
+    imagenes: [
+      "assets/img/calendario-2027/Calendario-1.jpeg",
+      "assets/img/calendario-2027/Calendario-1a.jpeg",
+      "assets/img/calendario-2027/Calendario-1b.jpeg",
+      "assets/img/calendario-2027/Calendario-1c.jpeg"
+    ],
+    omitirSeleccionDiseno: true,
+    destacado: false,
+    ...detalleCalendario2027
+  },
+  {
+    id: "combo-calendario-anotador",
+    nombre: "Combo Calendario + Anotador",
+    categoria: "Combos",
+    descripcion: "Combo con 1 Calendario 2027 de escritorio y 1 Anotador.",
+    precio: "$30.000",
+    preciosPorTamano: {
+      ComboCalendarioAnotador: 30000
+    },
+    imagenPrincipal: "assets/img/combo-anotador-calendario/combo-anotador-calendario-1.jpeg",
+    imagenes: [
+      "assets/img/combo-anotador-calendario/combo-anotador-calendario-1.jpeg",
+      "assets/img/combo-anotador-calendario/combo-anotador-calendario-1a.jpeg",
+      "assets/img/combo-anotador-calendario/combo-anotador-calendario-1b.png"
+    ],
+    omitirSeleccionDiseno: true,
+    destacado: false,
+    ...detalleComboCalendarioAnotador
   },
   {
     id: "disenos-unicos",
