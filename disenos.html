@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
+  <base href="/" />
+  <link rel="canonical" href="https://www.lumenpaper.com.ar/disenos.html" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Diseños de tapa y contratapa | Lumen Paper</title>
@@ -58,7 +60,7 @@
           <a href="disenos.html">Diseños</a>
           <a href="index.html#como-comprar">Cómo comprar</a>
           <a href="index.html#envios">Envíos</a>
-          <a href="#contacto">Contacto</a>
+          <a href="disenos.html#contacto">Contacto</a>
           <a href="index.html#carrito">Carrito (<span class="cart-count-inline">0</span>)</a>
           <a class="nav-whatsapp" id="headerWhatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a>
         </nav>
@@ -77,6 +79,9 @@
             </p>
           </div>
 
+          <p id="cartStatus" role="status" aria-live="polite"></p>
+          <p id="catalogStatus" role="status" aria-live="polite"></p>
+          <button class="button button-secondary" id="catalogRetryButton" type="button" hidden>Reintentar conexión</button>
           <div class="filters" id="designFilters" aria-label="Filtros por diseño"></div>
           <div class="designs-grid designs-grid-compact" id="designsGrid" aria-live="polite"></div>
           <div class="designs-more">
@@ -141,7 +146,13 @@
       WhatsApp
     </a>
 
+    <script src="data/productos.js"></script>
     <script src="data/disenos.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/catalog.js"></script>
+    <script src="js/cart-storage.js"></script>
+    <script src="js/orders.js"></script>
     <script src="js/main.js"></script>
   </body>
 </html>

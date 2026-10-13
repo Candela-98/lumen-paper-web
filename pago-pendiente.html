@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <base href="/" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="referrer" content="no-referrer" />
+  <title>Estado de tu pedido | Lumen Paper</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Belleza&family=DM+Serif+Display:ital@0;1&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="assets/img/marca/logo-lumen-paper.png" type="image/png" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-content">
+      <a class="brand" href="index.html" aria-label="Ir al inicio">
+        <img class="brand-logo" src="assets/img/marca/logo-lumen-paper.png" alt="Logo de Lumen Paper" width="2750" height="2750" />
+        <span>Lumen Paper</span>
+      </a>
+      <a class="button button-secondary" href="index.html#carrito">Volver al carrito</a>
+    </div>
+  </header>
+  <main class="container order-return">
+    <section class="cart-summary" aria-labelledby="returnTitle">
+      <p class="eyebrow">Tu compra en Lumen Paper</p>
+      <p>Volviste de Mercado Pago. Vamos a consultar el estado actualizado de tu pedido.</p>
+      <div role="status" aria-live="polite" aria-atomic="true">
+        <h1 id="returnTitle">Consultando tu pedido</h1>
+        <p id="returnMessage">La confirmación depende del estado informado por Lumen Paper.</p>
+      </div>
+      <p id="returnNotice"></p>
+      <p id="returnReference" class="order-return-reference"></p>
+      <div id="returnSummary"></div>
+      <p id="returnCartMessage" role="status"></p>
+      <div class="order-return-actions">
+        <button class="button button-primary" id="refreshOrder" type="button" disabled>Actualizar estado</button>
+        <a class="button button-secondary" id="returnWhatsapp" href="https://wa.me/5491127495859" target="_blank" rel="noopener noreferrer">Consultar por WhatsApp</a>
+        <a id="returnHomeLink" href="index.html#carrito">Ver mi carrito y pedido</a>
+      </div>
+      <noscript>Necesitás habilitar JavaScript para consultar el pedido. No podemos confirmar el pago desde esta página sin consultar el backend.</noscript>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="container"><p>Lumen Paper · Papelería personalizada con amor y propósito</p></div></footer>
+  <script src="js/config.js"></script>
+  <script src="js/cart-storage.js"></script>
+  <script src="js/orders.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/order-return.js"></script>
+</body>
+</html>

@@ -296,6 +296,11 @@ const detalleComboCalendarioAnotador = {
 const productos = [
   {
     id: "agenda-colectivero",
+    backendSlug: "agenda-colectivero",
+    skuPorTamano: {
+      A5: "AGENDA-COLECTIVERO-A5",
+      B5: "AGENDA-COLECTIVERO-B5"
+    },
     nombre: "Agenda Colectivero",
     categoria: "Agendas",
     descripcion: "Agenda artesanal con diseño personalizado para organizar actividades, fechas importantes e ideas.",
@@ -318,6 +323,11 @@ const productos = [
   },
   {
     id: "agenda-diaria",
+    backendSlug: "agenda-diaria",
+    skuPorTamano: {
+      A5: "AGENDA-DIARIA-A5",
+      B5: "AGENDA-DIARIA-B5"
+    },
     nombre: "Agenda Diaria",
     categoria: "Agendas",
     descripcion: "Agenda pensada para planificar cada día con claridad, calidez y espacio para tus prioridades.",
@@ -343,6 +353,10 @@ const productos = [
   },
   {
     id: "agenda-docente",
+    backendSlug: "agenda-docente",
+    skuPorTamano: {
+      A5: "AGENDA-DOCENTE-UNICA"
+    },
     nombre: "Agenda Docente",
     categoria: "Agendas",
     descripcion: "Agenda artesanal para docentes, ideal para organizar clases, planificaciones y seguimiento diario.",
@@ -369,6 +383,11 @@ const productos = [
   },
   {
     id: "agenda-perpetua",
+    backendSlug: "agenda-perpetua",
+    skuPorTamano: {
+      A5: "AGENDA-PERPETUA-A5",
+      B5: "AGENDA-PERPETUA-B5"
+    },
     nombre: "Agenda Perpetua Personalizada",
     categoria: "Agendas",
     descripcion: "Agenda sin fechas preestablecidas para organizar días, metas y proyectos a tu ritmo.",
@@ -396,6 +415,11 @@ const productos = [
   },
   {
     id: "cuaderno",
+    backendSlug: "cuaderno-personalizado",
+    skuPorTamano: {
+      A5: "CUADERNO-PERSONALIZADO-A5",
+      B5: "CUADERNO-PERSONALIZADO-B5"
+    },
     nombre: "Cuaderno Personalizado",
     categoria: "Cuadernos",
     descripcion: "Cuaderno artesanal en tamaño A5, práctico para apuntes, ideas, estudios y proyectos.",
@@ -418,6 +442,11 @@ const productos = [
   },
   {
     id: "cuaderno-pediatrico",
+    backendSlug: "cuaderno-pediatrico",
+    skuPorTamano: {
+      A5: "CUADERNO-PEDIATRICO-A5",
+      B5: "CUADERNO-PEDIATRICO-B5"
+    },
     nombre: "Cuaderno pediátrico",
     categoria: "Cuadernos",
     descripcion: "Cuaderno para seguir la salud, el crecimiento, vacunas y rutinas de tu bebé.",
@@ -450,6 +479,11 @@ const productos = [
   },
   {
     id: "devocional",
+    backendSlug: "devocional",
+    skuPorTamano: {
+      A5: "DEVOCIONAL-A5",
+      B5: "DEVOCIONAL-B5"
+    },
     nombre: "Devocional",
     categoria: "Devocionales",
     descripcion: "Devocional artesanal para acompañar momentos de reflexión, oración y crecimiento personal.",
@@ -499,6 +533,10 @@ const productos = [
   },
   {
     id: "libro-de-recuerdos",
+    backendSlug: "libro-de-recuerdos",
+    skuPorTamano: {
+      B5: "LIBRO-DE-RECUERDOS-UNICA"
+    },
     nombre: "Libro de Recuerdos Personalizado",
     categoria: "Recuerdos",
     descripcion: "Libro para guardar fotos, recuerdos y momentos especiales de los primeros años de tu bebé.",
@@ -527,6 +565,10 @@ const productos = [
   },
   {
     id: "combo-bebe",
+    backendSlug: "combo-bebe",
+    skuPorTamano: {
+      Combo: "COMBO-BEBE-UNICA"
+    },
     nombre: "Combo Bebé",
     categoria: "Combos",
     descripcion: "Combo con cuaderno pediátrico y libro de recuerdos para acompañar el crecimiento de tu bebé.",
@@ -548,6 +590,11 @@ const productos = [
   },
   {
     id: "devocional-nino",
+    backendSlug: "devocional-nino",
+    skuPorTamano: {
+      A5: "DEVOCIONAL-NINO-A5",
+      B5: "DEVOCIONAL-NINO-B5"
+    },
     nombre: "Devocional Niño",
     categoria: "Devocionales",
     descripcion: "Devocional infantil con diseño cuidado, pensado para acompañar la fe y los hábitos de los más chicos.",
@@ -570,6 +617,10 @@ const productos = [
   },
   {
     id: "anotador",
+    backendSlug: "anotador",
+    skuPorTamano: {
+      Anotador: "ANOTADOR-UNICA"
+    },
     nombre: "Anotador",
     categoria: "Anotadores",
     descripcion: "Anotador artesanal de 12 x 18 cm aprox., ideal para pendientes, ideas y recordatorios.",
@@ -590,6 +641,10 @@ const productos = [
   },
   {
     id: "calendario-2027",
+    backendSlug: "calendario-2027",
+    skuPorTamano: {
+      Calendario: "CALENDARIO-2027-UNICA"
+    },
     nombre: "Calendario 2027",
     categoria: "Calendarios",
     descripcion: "Calendario 2027 de escritorio para organizar fechas y acompanar tu espacio de trabajo.",
@@ -610,6 +665,10 @@ const productos = [
   },
   {
     id: "combo-calendario-anotador",
+    backendSlug: "combo-calendario-anotador",
+    skuPorTamano: {
+      ComboCalendarioAnotador: "COMBO-CALENDARIO-ANOTADOR-UNICA"
+    },
     nombre: "Combo Calendario + Anotador",
     categoria: "Combos",
     descripcion: "Combo con 1 Calendario 2027 de escritorio y 1 Anotador.",

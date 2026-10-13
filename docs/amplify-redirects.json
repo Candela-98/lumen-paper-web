@@ -1,0 +1,56 @@
+[
+  {
+    "source": "https://lumenpaper.com.ar",
+    "target": "https://www.lumenpaper.com.ar",
+    "status": "301",
+    "condition": null
+  },
+  {
+    "source": "/disenos",
+    "target": "/disenos.html",
+    "status": "200",
+    "condition": null
+  },
+  {
+    "source": "/disenos/",
+    "target": "/disenos.html",
+    "status": "200",
+    "condition": null
+  },
+  {
+    "source": "/pago-exitoso",
+    "target": "/pago-exitoso.html",
+    "status": "200",
+    "condition": null
+  },
+  {
+    "source": "/pago-exitoso/",
+    "target": "/pago-exitoso.html",
+    "status": "200",
+    "condition": null
+  },
+  {
+    "source": "/pago-pendiente",
+    "target": "/pago-pendiente.html",
+    "status": "200",
+    "condition": null
+  },
+  {
+    "source": "/pago-pendiente/",
+    "target": "/pago-pendiente.html",
+    "status": "200",
+    "condition": null
+  },
+  {
+    "source": "/pago-fallido",
+    "target": "/pago-fallido.html",
+    "status": "200",
+    "condition": null
+  },
+  {
+    "source": "/pago-fallido/",
+    "target": "/pago-fallido.html",
+    "status": "200",
+    "condition": null
+  }
+]
