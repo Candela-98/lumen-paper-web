@@ -37,7 +37,20 @@ const ORIGINAL_PRODUCT_IMAGE_PATTERNS = [
   "assets/img/combo-anotador-calendario/"
 ];
 
-const cart = [];
+const restoredCart = LumenCartStorage.load();
+const cart = restoredCart.items;
+let cartStorageMessage = restoredCart.message;
+let catalogReady = false;
+let orderSubmitting = false;
+let orderUncertain = LumenOrders.isSubmissionBlocked();
+let paymentUncertain = false;
+let paymentStarting = false;
+let orderRestoring = false;
+let createdOrder = null;
+let orderReference = null;
+let catalogProducts = typeof productos === "undefined" ? [] : LumenCatalog.resolve(productos, []);
+let activeProductCategory = ALL_CATEGORIES_LABEL;
+let catalogLoading = false;
 let activeDesignCategory = ALL_CATEGORIES_LABEL;
 let visibleDesignsCount = DESIGN_BATCH_SIZE;
 
@@ -233,31 +246,158 @@ function getUnitPrice(product, size) {
     return null;
   }
 
-  return product.preciosPorTamano ? product.preciosPorTamano[size] : null;
+  const variant = product.variantesResueltas && product.variantesResueltas[size];
+  return variant ? variant.precio : null;
 }
 
 function getAvailableSizes(product) {
-  if (!product || !product.preciosPorTamano) {
-    return [];
-  }
-
-  return Object.keys(product.preciosPorTamano);
+  return product && product.variantesResueltas ? Object.keys(product.variantesResueltas) : [];
 }
 
 function getValidQuantity(value) {
   const quantity = Number.parseInt(value, 10);
-  return Number.isFinite(quantity) && quantity >= 1 ? quantity : 1;
+  return Number.isFinite(quantity) && quantity >= 1 ? Math.min(quantity, 1000) : 1;
 }
 
 function getCartTotal() {
-  return cart.reduce((total, item) => total + item.subtotal, 0);
+  return cart.reduce((total, item) => total + (item.disponible ? item.subtotal : 0), 0);
 }
+
+function persistCart() {
+  cartStorageMessage = LumenCartStorage.save(cart);
+}
+
+function canFinalizeCart() {
+  return catalogReady && !catalogLoading && !orderSubmitting && !orderUncertain && !paymentStarting && !orderRestoring && !orderReference && cart.length > 0 && cart.every((item) => item.disponible);
+}
+
+function reconcileCart() {
+  const updated = cart.map((saved) => {
+    const product = catalogProducts.find((candidate) => candidate.id === saved.productoId);
+    const expectedSku = product && product.skuPorTamano && product.skuPorTamano[saved.tamano];
+    const variant = product && product.variantesResueltas && product.variantesResueltas[saved.tamano];
+    const design = product && getDesignsForProduct(product).find((candidate) => candidate.id === saved.disenoId);
+    const customAllowed = product && !product.omitirSeleccionDiseno && !isBabyDesignOnlyProduct(product);
+    const designValid = product && (product.omitirSeleccionDiseno ? saved.disenoId === null
+      : Boolean(design) || (saved.disenoId === CUSTOM_DESIGN_VALUE && customAllowed));
+    const available = Boolean(catalogReady && !catalogLoading && product && !isPriceToCoordinate(product) &&
+      expectedSku === saved.sku && variant && variant.precio > 0 && designValid);
+    let reason = "Estamos verificando disponibilidad y precios del carrito.";
+    if (catalogReady && !catalogLoading) {
+      reason = !product || !variant || expectedSku !== saved.sku || (variant && variant.precio <= 0)
+        ? "Esta variante ya no está disponible. Eliminá el producto para continuar."
+        : "El diseño elegido ya no está disponible. Eliminá el producto y elegí otro diseño.";
+    }
+    return { ...saved,
+      producto: product ? product.nombre : "Producto no disponible",
+      categoria: product ? product.categoria : "",
+      backendSlug: product ? product.backendSlug : null,
+      medida: SIZES[saved.tamano] || saved.tamano,
+      diseno: design ? design.nombre : saved.disenoId === CUSTOM_DESIGN_VALUE ? "Diseño personalizado"
+        : saved.disenoId === null ? "Diseño a consultar por WhatsApp" : "Diseño no disponible",
+      categoriaDiseno: design ? design.categoriaDiseno : "",
+      variant_id: available ? variant.variant_id : saved.variant_id,
+      precioUnitario: available ? variant.precio : null,
+      subtotal: available ? variant.precio * saved.cantidad : null,
+      disponible: available,
+      motivoNoDisponible: available ? "" : reason
+    };
+  });
+  cart.splice(0, cart.length, ...updated);
+  renderCart();
+}
+
+function setupCartPersistence() {
+  // Guards outside the existing checkout handlers keep its fields and WhatsApp flow intact.
+  for (const [target, eventName] of [[checkoutStartButton, "click"], [checkoutForm, "submit"]]) {
+    if (target) target.addEventListener(eventName, (event) => {
+      if (!canFinalizeCart()) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (checkoutMessage) checkoutMessage.textContent = "Revisá los productos no disponibles o esperá la validación del catálogo.";
+      }
+    }, true);
+  }
+  const openFromHash = () => {
+    if (window.location.hash === "#carrito" && cartModal) openCartModal();
+  };
+  window.addEventListener("hashchange", openFromHash);
+  window.addEventListener("storage", (event) => {
+    if (event.key !== LumenCartStorage.key && event.key !== null) return;
+    const restored = LumenCartStorage.load();
+    cartStorageMessage = restored.message;
+    cart.splice(0, cart.length, ...restored.items);
+    reconcileCart();
+  });
+  window.addEventListener("pageshow", (event) => {
+    if (!event.persisted) return;
+    const restored = LumenCartStorage.load();
+    cartStorageMessage = restored.message;
+    cart.splice(0, cart.length, ...restored.items);
+    paymentStarting = false;
+    loadLocalCatalog();
+    restoreOrderReference();
+  });
+  openFromHash();
+}
+
+window.addEventListener("pagehide", () => {
+  performCheckout.sequence = (performCheckout.sequence || 0) + 1;
+});
 
 function updateCartCounters() {
   const totalItems = cart.reduce((total, item) => total + item.cantidad, 0);
   document.querySelectorAll(".cart-count-inline").forEach((counter) => {
     counter.textContent = totalItems;
   });
+}
+
+function getProductPriceLabel(product) {
+  if (isPriceToCoordinate(product)) return product.precio || "Precio a coordinar";
+  const prices = getAvailableSizes(product).map((size) => getUnitPrice(product, size));
+  if (!prices.length) return "Precio no disponible";
+  return `${prices.length > 1 ? "Desde " : ""}${formatPrice(Math.min(...prices))}`;
+}
+
+async function loadLocalCatalog() {
+  if (typeof productos === "undefined" || catalogLoading) return;
+  const status = document.querySelector("#catalogStatus");
+  const retry = document.querySelector("#catalogRetryButton");
+  if (!LUMEN_CONFIG.apiBaseUrl) {
+    if (status) status.textContent = "La API del catálogo no está configurada para este sitio. Las compras con precio están deshabilitadas.";
+    if (retry) retry.hidden = true;
+    reconcileCart();
+    return;
+  }
+  catalogLoading = true;
+  catalogReady = false;
+  reconcileCart();
+  if (status) status.textContent = "Cargando precios y disponibilidad…";
+  if (retry) retry.hidden = true;
+  if (productsGrid) productsGrid.setAttribute("aria-busy", "true");
+  try {
+    const response = await LumenApi.getPublicProducts();
+    catalogProducts = LumenCatalog.resolve(productos, response);
+    if (productModal && productModal.classList.contains("is-open")) closeProductModal();
+    renderProducts(activeProductCategory);
+    const incomplete = catalogProducts.some((product) =>
+      !isPriceToCoordinate(product) && product.tamanosNoDisponibles.length > 0);
+    catalogReady = true;
+    if (status) status.textContent = incomplete
+      ? "Catálogo conectado. Algunas opciones no están disponibles en el backend."
+      : "Catálogo conectado. Precios y variantes actualizados.";
+    if (retry) retry.hidden = !incomplete;
+  } catch (error) {
+    catalogProducts = LumenCatalog.resolve(productos, []);
+    if (productModal && productModal.classList.contains("is-open")) closeProductModal();
+    renderProducts(activeProductCategory);
+    if (status) status.textContent = `No se pudo cargar el catálogo. ${error.message} Podés reintentar en unos momentos.`;
+    if (retry) retry.hidden = false;
+  } finally {
+    catalogLoading = false;
+    if (productsGrid) productsGrid.setAttribute("aria-busy", "false");
+    reconcileCart();
+  }
 }
 
 function createProductCard(product, index = 0) {
@@ -281,7 +421,7 @@ function createProductCard(product, index = 0) {
       <p class="product-category">${product.categoria}</p>
       <h3>${product.nombre}</h3>
       <p class="product-description">${product.descripcion}</p>
-      <p class="product-price">${product.precio || "Precio a coordinar"}</p>
+      <p class="product-price">${getProductPriceLabel(product)}</p>
       <button class="button product-buy-button" type="button">
         ${hasCoordinatedPrice ? "Consultar por WhatsApp" : "Ver opciones"}
       </button>
@@ -309,15 +449,16 @@ function createProductCard(product, index = 0) {
   return article;
 }
 
-function renderProducts(category = ALL_CATEGORIES_LABEL) {
+function renderProducts(category = activeProductCategory) {
   if (!productsGrid || typeof productos === "undefined") {
     return;
   }
 
+  activeProductCategory = category;
   const filteredProducts =
     category === ALL_CATEGORIES_LABEL
-      ? productos
-      : productos.filter((product) => product.categoria === category);
+      ? catalogProducts
+      : catalogProducts.filter((product) => product.categoria === category);
 
   productsGrid.innerHTML = "";
   filteredProducts.forEach((product, index) => {
@@ -634,6 +775,13 @@ function createProductOptionsMarkup(product) {
     `;
   }
 
+  if (getAvailableSizes(product).length === 0) {
+    return `<div class="product-options"><p class="price-box">No hay variantes disponibles para comprar este producto. Necesitamos consultar el catálogo actualizado.</p><button class="button modal-buy-button" type="button" disabled>Agregar al carrito</button></div>`;
+  }
+
+  const unavailableNote = product.tamanosNoDisponibles.length
+    ? `<p class="form-message">Opciones no disponibles: ${product.tamanosNoDisponibles.map(escapeAttribute).join(", ")}.</p>`
+    : "";
   const designSelectMarkup = product.omitirSeleccionDiseno
     ? ""
     : `
@@ -648,6 +796,7 @@ function createProductOptionsMarkup(product) {
   return `
         <form class="product-options" id="productOptionsForm">
           ${createSizeOptionsMarkup(product)}
+          ${unavailableNote}
 
           ${designSelectMarkup}
 
@@ -748,6 +897,7 @@ function setupProductOptions(product) {
   }
 
   const form = document.querySelector("#productOptionsForm");
+  if (!form) return;
   const quantityInput = document.querySelector("#productQuantity");
   const designSelect = document.querySelector("#productDesign");
   const unitPriceText = document.querySelector("#unitPriceText");
@@ -764,7 +914,7 @@ function setupProductOptions(product) {
     const quantity = getValidQuantity(quantityInput.value);
     const unitPrice = getUnitPrice(product, selectedSize);
 
-    if (!unitPrice) {
+    if (unitPrice === null || unitPrice <= 0) {
       unitPriceText.textContent = "Precio no configurado para este tamaño.";
       subtotalText.textContent = "";
       return;
@@ -785,6 +935,10 @@ function setupProductOptions(product) {
     event.preventDefault();
     message.textContent = "";
 
+    if (!catalogReady || catalogLoading) {
+      message.textContent = "Esperá a que se verifique el catálogo para agregar productos.";
+      return;
+    }
     const selectedSize = getSelectedSize();
     const selectedDesignId = designSelect ? designSelect.value : "";
     const quantity = getValidQuantity(quantityInput.value);
@@ -800,7 +954,7 @@ function setupProductOptions(product) {
       return;
     }
 
-    if (!unitPrice) {
+    if (unitPrice === null || unitPrice <= 0) {
       message.textContent = "Este producto no tiene precio configurado para el tamaño elegido.";
       return;
     }
@@ -815,12 +969,22 @@ function setupProductOptions(product) {
         : "Diseño personalizado"
       : "Diseño a consultar por WhatsApp";
 
+    if (cart.length >= 50) {
+      message.textContent = "El carrito admite hasta 50 líneas. Eliminá una para agregar otro producto.";
+      return;
+    }
     cart.push({
       productoId: product.id,
+      backendSlug: product.backendSlug,
+      variant_id: product.variantesResueltas[selectedSize].variant_id,
+      sku: product.variantesResueltas[selectedSize].sku,
       producto: product.nombre,
       categoria: product.categoria,
       tamano: selectedSize,
       medida: SIZES[selectedSize],
+      disenoId: designSelect ? selectedDesignId : null,
+      disponible: true,
+      motivoNoDisponible: "",
       diseno: designName,
       categoriaDiseno: selectedDesign ? selectedDesign.categoriaDiseno : "",
       cantidad: quantity,
@@ -828,6 +992,7 @@ function setupProductOptions(product) {
       subtotal: unitPrice * quantity
     });
 
+    persistCart();
     quantityInput.value = 1;
     renderCart();
     openAddCartModal();
@@ -924,10 +1089,6 @@ function hideCheckoutForm() {
     checkoutForm.classList.add("checkout-form-hidden");
   }
 
-  if (checkoutMessage) {
-    checkoutMessage.textContent = "";
-  }
-
   if (checkoutNote) {
     checkoutNote.hidden = true;
   }
@@ -935,12 +1096,14 @@ function hideCheckoutForm() {
 
 function renderCart() {
   updateCartCounters();
+  const cartStatus = document.querySelector("#cartStatus");
+  const blocked = cart.length > 0 && (!catalogReady || catalogLoading || cart.some((item) => !item.disponible));
+  if (cartStatus) cartStatus.textContent = [cartStorageMessage,
+    blocked ? (!catalogReady || catalogLoading ? "No se puede finalizar hasta verificar el catálogo actual."
+      : "Hay productos o diseños no disponibles. Eliminá esas líneas para continuar.") : ""].filter(Boolean).join(" ");
+  if (checkoutStartButton) checkoutStartButton.disabled = !canFinalizeCart();
   if (!cartItems || !cartTotal) {
     return;
-  }
-
-  if (checkoutMessage) {
-    checkoutMessage.textContent = "";
   }
 
   if (cart.length === 0) {
@@ -962,21 +1125,22 @@ function renderCart() {
     cartSummary.classList.remove("cart-summary-hidden");
   }
 
-  hideCheckoutForm();
+  if (blocked) hideCheckoutForm();
 
   cartItems.innerHTML = cart
     .map(
       (item, index) => `
         <article class="cart-item">
           <div>
-            <h3>${item.producto}</h3>
-            <p>Tamaño: ${item.tamano} - ${item.medida}</p>
-            <p>Diseño: ${item.diseno}${item.categoriaDiseno ? ` (${item.categoriaDiseno})` : ""}</p>
+            <h3>${escapeAttribute(item.producto)}</h3>
+            <p>Tamaño: ${escapeAttribute(item.tamano)} - ${escapeAttribute(item.medida)}</p>
+            <p>Diseño: ${escapeAttribute(item.diseno)}${item.categoriaDiseno ? ` (${escapeAttribute(item.categoriaDiseno)})` : ""}</p>
             <p>Cantidad: ${item.cantidad}</p>
-            <p>Precio unitario: ${formatPrice(item.precioUnitario)}</p>
-            <p>Subtotal: ${formatPrice(item.subtotal)}</p>
+            ${item.disponible
+              ? `<p>Precio unitario: ${formatPrice(item.precioUnitario)}</p><p>Subtotal: ${formatPrice(item.subtotal)}</p>`
+              : `<p class="form-message">${escapeAttribute(item.motivoNoDisponible)}</p>`}
           </div>
-          <button class="button button-secondary cart-remove-button" type="button" data-index="${index}">
+          <button class="button button-secondary cart-remove-button" type="button" data-index="${index}" ${orderSubmitting ? "disabled" : ""}>
             Eliminar
           </button>
         </article>
@@ -984,11 +1148,14 @@ function renderCart() {
     )
     .join("");
 
-  cartTotal.textContent = `Total general sin envío: ${formatPrice(getCartTotal())}`;
+  cartTotal.textContent = blocked
+    ? `Subtotal de productos verificados, sin envío: ${formatPrice(getCartTotal())}. Carrito pendiente de revisión.`
+    : `Total general sin envío: ${formatPrice(getCartTotal())}`;
 
   cartItems.querySelectorAll(".cart-remove-button").forEach((button) => {
     button.addEventListener("click", () => {
       cart.splice(Number(button.dataset.index), 1);
+      persistCart();
       renderCart();
     });
   });
@@ -1027,53 +1194,307 @@ Aclaración: el envío por correo o punto de entrega se coordina por WhatsApp.
 Muchas gracias.`;
 }
 
-function setupCheckout() {
-  if (!checkoutForm || !clearCartButton || !checkoutStartButton) {
-    return;
+function setOrderBusy(busy) {
+  orderSubmitting = busy;
+  const fields = document.querySelector("#checkoutFields");
+  if (fields) fields.disabled = busy || orderUncertain || Boolean(orderReference);
+  if (clearCartButton) clearCartButton.disabled = busy;
+  const newOrderButton = document.querySelector("#newOrderButton");
+  if (newOrderButton) {
+    newOrderButton.disabled = busy || orderRestoring || paymentStarting || Boolean(createdOrder && createdOrder.status === "PAYMENT_REVIEW");
+    newOrderButton.hidden = Boolean(createdOrder && createdOrder.status === "PAYMENT_REVIEW");
   }
+  const refreshOrderButton = document.querySelector("#refreshOrderButton");
+  if (refreshOrderButton) refreshOrderButton.disabled = busy || orderRestoring || paymentStarting;
+  updatePaymentButton();
+  if (checkoutForm) checkoutForm.setAttribute("aria-busy", String(busy));
+  renderCart();
+}
 
+function updateDeliveryFields() {
+  const method = document.querySelector("#deliveryMethod");
+  const shipping = document.querySelector("#shippingFields");
+  if (!method || !shipping) return;
+  const isShipping = method.value === "CORREO_ARGENTINO";
+  shipping.hidden = !isShipping;
+  shipping.disabled = !isShipping;
+  document.querySelector("#deliveryNote").textContent = isShipping
+    ? "El envío se cotiza y paga por separado. No está incluido en el total del pedido."
+    : "El retiro no tiene costo. Coordinamos el punto de encuentro por WhatsApp.";
+}
+
+function canPayOrder() {
+  return Boolean(LUMEN_CONFIG.mercadoPagoEnabled === true && createdOrder && LumenOrders.validId(orderReference) && createdOrder.public_id.toLowerCase() === orderReference.toLowerCase() &&
+    createdOrder.status === "PENDING_PAYMENT" && !orderSubmitting && !orderRestoring && !paymentStarting && !paymentUncertain && !LumenApi.isCheckoutBlocked(orderReference));
+}
+
+function canRecoverCheckout() {
+  return Boolean(LUMEN_CONFIG.mercadoPagoEnabled === true && createdOrder && LumenOrders.validId(orderReference) &&
+    createdOrder.public_id.toLowerCase() === orderReference.toLowerCase() && createdOrder.status === "PENDING_PAYMENT" &&
+    !orderSubmitting && !orderRestoring && !paymentStarting);
+}
+
+function updatePaymentButton() {
+  const button = document.querySelector("#payOrderButton");
+  if (!button) return;
+  button.disabled = !canPayOrder();
+  button.hidden = Boolean(createdOrder && createdOrder.status !== "PENDING_PAYMENT");
+  button.textContent = LUMEN_CONFIG.mercadoPagoEnabled !== true ? "Mercado Pago no habilitado"
+    : paymentStarting ? "Abriendo Mercado Pago…" : "Pagar con Mercado Pago";
+  button.setAttribute("aria-busy", String(paymentStarting));
+  const recover = document.querySelector("#recoverCheckoutButton");
+  if (recover) {
+    recover.disabled = !canRecoverCheckout();
+    recover.hidden = LUMEN_CONFIG.mercadoPagoEnabled !== true || Boolean(createdOrder && createdOrder.status !== "PENDING_PAYMENT");
+    recover.setAttribute("aria-busy", String(paymentStarting));
+  }
+}
+
+async function startPayment() {
+  if (!canPayOrder()) return;
+  return performCheckout(false);
+}
+
+async function recoverCheckout() {
+  if (!canRecoverCheckout()) return;
+  return performCheckout(true);
+}
+
+async function performCheckout(recover) {
+  const message = document.querySelector("#paymentMessage");
+  const id = orderReference;
+  const sequence = (performCheckout.sequence || 0) + 1;
+  performCheckout.sequence = sequence;
+  paymentStarting = true;
+  setOrderBusy(false);
+  message.textContent = recover ? "Consultando el enlace de pago existente…" : "Preparando el enlace de pago…";
+  let redirected = false;
+  let checkoutReceived = false;
+  try {
+    const checkout = await (recover ? LumenApi.recoverOrderCheckout(id) : LumenApi.startOrderCheckout(id));
+    checkoutReceived = true;
+    if (sequence !== performCheckout.sequence) return;
+    // Never navigate using a cached order status after recovering or creating a preference.
+    const current = LumenOrders.validateSummary(await LumenApi.getPublicOrder(id), id);
+    if (sequence !== performCheckout.sequence) return;
+    if (id !== orderReference || orderRestoring) throw new Error("La referencia del pedido cambió durante la consulta.");
+    createdOrder = current;
+    if (current.status !== "PENDING_PAYMENT") {
+      showOrderSummary(current, "Consultamos el estado actual del pedido.");
+      const error = new Error("El pedido ya no está pendiente de pago.");
+      error.code = "ORDER_NOT_PENDING_PAYMENT";
+      throw error;
+    }
+    message.textContent = "Redirigiendo a Mercado Pago…";
+    window.location.assign(checkout.checkout_url);
+    redirected = true;
+  } catch (error) {
+    if (sequence !== performCheckout.sequence) return;
+    if (error.code === "CHECKOUT_NOT_STARTED" && recover && error.status === 409) {
+      paymentUncertain = false;
+      await restoreOrderReference();
+      message.textContent = createdOrder && createdOrder.status === "PENDING_PAYMENT"
+        ? "El servidor no encontró un checkout anterior. Podés iniciar el primer pago con el botón Pagar; no lo iniciamos automáticamente."
+        : "No recuperamos un enlace. Revisá el estado del pedido antes de continuar.";
+    } else if (error.code === "CHECKOUT_EXPIRED" || error.code === "CHECKOUT_REVIEW_REQUIRED") {
+      paymentUncertain = true;
+      message.textContent = error.code === "CHECKOUT_EXPIRED"
+        ? "El enlace de pago venció. No abrimos ni creamos otra preferencia. Contactá a Lumen Paper por WhatsApp para revisar el pedido."
+        : "El enlace de pago requiere revisión. No abrimos ni creamos otra preferencia. Contactá a Lumen Paper por WhatsApp.";
+    } else if (error.code === "ORDER_NOT_PENDING_PAYMENT") {
+      await restoreOrderReference(); // GET only: never retry checkout.
+      message.textContent = createdOrder && createdOrder.status === "PAYMENT_REVIEW"
+        ? "El pago está en revisión. No confirmamos la compra ni ofrecemos otro checkout. Tu carrito se conserva; contactá a Lumen Paper por WhatsApp."
+        : "El pedido ya no está pendiente de pago. Consultamos su estado actual; no iniciamos otro checkout.";
+    } else if (error.code === "PAYMENT_DISABLED" || error.code === "PAYMENT_NOT_CONFIGURED") {
+      message.textContent = "El pago con Mercado Pago no está habilitado en este ambiente. Tu pedido y carrito se conservan; podés coordinar por WhatsApp.";
+    } else if (error.code === "NOT_FOUND") {
+      createdOrder = null;
+      message.textContent = "No encontramos el pedido en el servidor. Conservamos su referencia y tu carrito; consultá por WhatsApp.";
+    } else if (error.code === "ORDER_AMOUNT_INVALID") {
+      message.textContent = "El servidor no pudo validar el importe del pedido. Conservamos el pedido y carrito; consultá por WhatsApp.";
+    } else if (error.uncertain || checkoutReceived || ["CHECKOUT_ALREADY_STARTED", "CHECKOUT_BUSY", "CHECKOUT_UNCERTAIN", "PAYMENT_TIMEOUT", "PAYMENT_UNAVAILABLE", "PAYMENT_PROVIDER_ERROR"].includes(error.code)) {
+      paymentUncertain = true;
+      message.textContent = "No pudimos confirmar el enlace de pago. Tu pedido y carrito se conservan y no creamos otra preferencia. Podés consultar el enlace existente con Recuperar enlace de pago; si no aparece, contactá a Lumen Paper por WhatsApp.";
+    } else {
+      message.textContent = "No pudimos iniciar el pago. El pedido y carrito se conservan; revisá la conexión o consultá por WhatsApp.";
+    }
+  } finally {
+    // Stay locked until navigation completes; back/forward restoration unlocks and reads the order again.
+    if (sequence === performCheckout.sequence) {
+      if (!redirected) paymentStarting = false;
+      setOrderBusy(false);
+    }
+  }
+}
+
+function showOrderSummary(order, message) {
+  const result = document.querySelector("#orderResult");
+  result.hidden = false;
+  document.querySelector("#orderResultMessage").textContent = order.status === "PAYMENT_REVIEW"
+    ? "Pago en revisión. Puede haber un reembolso, contracargo o una inconsistencia. No podemos confirmar la compra. Tu carrito se conserva; contactá a Lumen Paper por WhatsApp."
+    : message;
+  const details = document.querySelector("#orderResultDetails");
+  const statuses = { PENDING_PAYMENT: "Pendiente de pago", PAID: "Pagado", CANCELLED: "Cancelado", PAYMENT_REVIEW: "Pago en revisión" };
+  details.innerHTML = `<p>Referencia: ${escapeAttribute(order.public_id)}</p><p>Estado: ${statuses[order.status]}</p>
+    ${order.items.map(item => `<article class="cart-item"><div><h3>${escapeAttribute(item.product_name)}</h3>
+      <p>${escapeAttribute(item.variant_name)} · Cantidad: ${item.quantity}</p>
+      ${item.personalization ? `<p>${escapeAttribute(item.personalization)}</p>` : ""}
+      <p>Precio unitario: ${formatPrice(item.unit_price)} · Subtotal: ${formatPrice(item.subtotal)}</p></div></article>`).join("")}
+    <p>Subtotal de productos: ${formatPrice(order.subtotal)}</p><p>Total del pedido: ${formatPrice(order.total)}</p>
+    <p>${order.delivery.method === "PICKUP" ? "Retiro gratuito. Punto de encuentro pendiente de coordinación."
+      : "Envío por Correo Argentino: pendiente de cotización y pago por separado. No incluido en el total."}</p>
+    <p>Coordiná los detalles de tu pedido por WhatsApp.</p>`;
+  document.querySelector("#orderCoordinationWhatsapp").href = buildWhatsappUrl(`Hola, quiero coordinar el pedido ${order.public_id} de Lumen Paper.`);
+  hideCheckoutForm();
+  if (order.status === "PAYMENT_REVIEW") {
+    document.querySelector("#paymentMessage").textContent = "No ofrecemos otro pago mientras el pedido está en revisión.";
+  } else if (LumenApi.isCheckoutBlocked(order.public_id) && order.status === "PENDING_PAYMENT") {
+    document.querySelector("#paymentMessage").textContent = "Ya se consultó un enlace para este pedido. Recuperá la preferencia existente; no inicies otro checkout.";
+  }
+  updatePaymentButton();
+}
+
+async function restoreOrderReference() {
+  if (!checkoutForm || orderRestoring) return;
+  orderReference = LumenOrders.readReference() || orderReference;
+  const references = new URLSearchParams(window.location.search).getAll("external_reference");
+  if (references.length === 1 && LumenOrders.validId(references[0])) {
+    orderReference = references[0].toLowerCase();
+    LumenOrders.saveReference(orderReference);
+  }
+  createdOrder = null;
+  if (!orderReference) return;
+  const result = document.querySelector("#orderResult");
+  result.hidden = false;
+  document.querySelector("#orderResultMessage").textContent = "Consultando el último pedido creado…";
+  document.querySelector("#orderCoordinationWhatsapp").href = buildWhatsappUrl(`Hola, quiero consultar por el pedido ${orderReference} de Lumen Paper.`);
+  orderRestoring = true;
+  setOrderBusy(false);
+  try {
+    createdOrder = LumenOrders.validateSummary(await LumenApi.getPublicOrder(orderReference), orderReference);
+    orderUncertain = false;
+    LumenOrders.setSubmissionBlocked(false);
+    const cartMessage = LumenOrders.clearPaidCart(createdOrder);
+    if (createdOrder.status === "PAID") {
+      const restored = LumenCartStorage.load();
+      if (!restored.message) cart.splice(0, cart.length, ...restored.items);
+      else cartStorageMessage = restored.message;
+      reconcileCart();
+    }
+    showOrderSummary(createdOrder, "Recuperamos el resumen del pedido desde el servidor. " + cartMessage);
+  } catch {
+    document.querySelector("#orderResultMessage").textContent = `No pudimos consultar el pedido ${orderReference}. Conservamos su referencia; podés consultarlo por WhatsApp.`;
+  } finally { orderRestoring = false; setOrderBusy(false); }
+}
+
+function setupCheckout() {
+  if (!checkoutForm || !clearCartButton || !checkoutStartButton) return;
+  updatePaymentButton();
+  const method = document.querySelector("#deliveryMethod");
+  method.addEventListener("change", updateDeliveryFields);
+  updateDeliveryFields();
+  if (orderUncertain) {
+    document.querySelector("#orderResult").hidden = false;
+    document.querySelector("#orderResultMessage").textContent = "Hay un envío de pedido sin confirmar. Consultá por WhatsApp antes de crear otro pedido.";
+    document.querySelector("#orderCoordinationWhatsapp").href = buildWhatsappUrl("Hola, envié un pedido pero no recibí confirmación. Quiero verificarlo antes de repetirlo.");
+    setOrderBusy(false);
+  }
   checkoutStartButton.addEventListener("click", () => {
+    if (!canFinalizeCart()) return;
     checkoutMessage.textContent = "";
-
-    if (cart.length === 0) {
-      checkoutMessage.textContent = "El carrito está vacío. Agregá un producto antes de finalizar.";
-      return;
-    }
-
     checkoutForm.classList.remove("checkout-form-hidden");
-    if (checkoutNote) {
-      checkoutNote.hidden = !cart.some((item) => item.productoId === "cuaderno-pediatrico");
-    }
+    if (checkoutNote) checkoutNote.hidden = !cart.some(item => item.productoId === "cuaderno-pediatrico");
     customerName.focus();
   });
-
-  checkoutForm.addEventListener("submit", (event) => {
+  checkoutForm.addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (!canFinalizeCart()) return;
     checkoutMessage.textContent = "";
-
-    const customerData = {
-      name: customerName.value.trim(),
-      lastName: customerLastName.value.trim(),
-      phone: customerPhone.value.trim()
-    };
-
-    if (cart.length === 0) {
-      checkoutMessage.textContent = "El carrito está vacío. Agregá un producto antes de finalizar.";
-      return;
-    }
-
-    if (!customerData.name || !customerData.lastName || !customerData.phone) {
-      checkoutMessage.textContent = "Completá nombre, apellido y teléfono para finalizar.";
-      return;
-    }
-
-    window.open(createWhatsappLink("", buildOrderMessage(customerData)), "_blank", "noopener");
-    checkoutForm.reset();
+    let request;
+    try {
+      const value = id => document.querySelector(`#${id}`).value;
+      request = LumenOrders.buildRequest({first_name: customerName.value, last_name: customerLastName.value,
+        dni: value("customerDni"), phone: customerPhone.value, email: value("customerEmail"), delivery_method: method.value,
+        address: value("shippingAddress"), floor_apartment: value("shippingFloor"), postal_code: value("shippingPostalCode"),
+        city: value("shippingCity"), province: value("shippingProvince")}, cart);
+      if (!checkoutForm.reportValidity()) return;
+    } catch (error) { checkoutMessage.textContent = error.message; return; }
+    const submittedCart = LumenCartStorage.sanitize(cart);
+    LumenOrders.setSubmissionBlocked(true);
+    setOrderBusy(true);
+    checkoutMessage.textContent = "Creando tu pedido…";
+    let responseReceived = false;
+    try {
+      const response = await LumenApi.createOrder(request);
+      responseReceived = true;
+      // Retain a valid UUID even if another response field is malformed.
+      if (LumenOrders.validId(response && response.public_id)) {
+        orderReference = response.public_id;
+        LumenOrders.saveReference(orderReference);
+        LumenOrders.rememberCart(orderReference, submittedCart);
+      }
+      createdOrder = LumenOrders.validateSummary(response);
+      const stored = LumenOrders.saveReference(createdOrder.public_id);
+      if (stored) LumenOrders.setSubmissionBlocked(false);
+      showOrderSummary(createdOrder, stored ? "Pedido creado. Estos importes fueron calculados por el servidor."
+        : "Pedido creado. Guardá su referencia: el navegador no permite conservarla al recargar.");
+      checkoutMessage.textContent = "";
+      checkoutForm.reset();
+      updateDeliveryFields();
+    } catch (error) {
+      orderUncertain = Boolean(error.uncertain || responseReceived);
+      if (!orderUncertain) LumenOrders.setSubmissionBlocked(false);
+      if (orderUncertain && !orderReference) {
+        document.querySelector("#orderResult").hidden = false;
+        document.querySelector("#orderResultMessage").textContent = "El pedido podría haberse creado. Conservamos el carrito y bloqueamos otro envío hasta que lo verifiques por WhatsApp.";
+        document.querySelector("#orderCoordinationWhatsapp").href = buildWhatsappUrl("Hola, envié un pedido pero no recibí confirmación. Quiero verificarlo antes de repetirlo.");
+      }
+      if (orderReference) {
+        document.querySelector("#orderResult").hidden = false;
+        document.querySelector("#orderResultMessage").textContent = `El servidor devolvió la referencia ${orderReference}, pero no pudimos leer el resumen. Consultá por WhatsApp antes de crear otro pedido.`;
+        document.querySelector("#orderCoordinationWhatsapp").href = buildWhatsappUrl(`Hola, quiero consultar el pedido ${orderReference}.`);
+      } else if (!orderUncertain && (error.code === "VARIANT_NOT_PURCHASABLE" || error.code === "NOT_FOUND")) {
+        await loadLocalCatalog();
+        checkoutMessage.textContent = "Algún producto ya no está disponible. Actualizamos el catálogo; revisá el carrito. Tus datos y productos se conservaron.";
+      } else if (!orderUncertain && error.code === "VALIDATION_ERROR") {
+        checkoutMessage.textContent = "El servidor rechazó los datos. Revisá los campos obligatorios, el email y las cantidades; el carrito se conservó.";
+      } else {
+        checkoutMessage.textContent = (error.uncertain || responseReceived)
+          ? "No recibimos confirmación. El pedido podría haberse creado. Consultá por WhatsApp antes de volver a enviarlo; conservamos tu carrito y tus datos en esta página."
+          : "No pudimos crear el pedido. Revisá la conexión y los datos; tu carrito se conserva.";
+      }
+    } finally { setOrderBusy(false); }
   });
-
   clearCartButton.addEventListener("click", () => {
+    if (orderSubmitting) return;
     cart.length = 0;
+    persistCart();
     renderCart();
+  });
+  document.querySelector("#payOrderButton").addEventListener("click", startPayment);
+  document.querySelector("#recoverCheckoutButton").addEventListener("click", recoverCheckout);
+  document.querySelector("#refreshOrderButton").addEventListener("click", () => {
+    if (!orderSubmitting && !orderRestoring && !paymentStarting) restoreOrderReference();
+  });
+  document.querySelector("#newOrderButton").addEventListener("click", () => {
+    if (orderSubmitting || orderRestoring || paymentStarting) return;
+    if (createdOrder && createdOrder.status === "PAYMENT_REVIEW") return;
+    if ((orderUncertain || paymentUncertain || LumenApi.isCheckoutBlocked(orderReference)) &&
+        !window.confirm("El pedido anterior podría existir o tener un pago en curso. ¿Ya verificaste con Lumen Paper que podés crear una compra nueva sin duplicarlo?")) return;
+    orderUncertain = false;
+    paymentUncertain = false;
+    LumenOrders.setSubmissionBlocked(false);
+    LumenOrders.clearReference();
+    document.querySelector("#paymentMessage").textContent = "";
+    checkoutMessage.textContent = "";
+    orderReference = null;
+    createdOrder = null;
+    document.querySelector("#orderResult").hidden = true;
+    document.querySelector("#orderResultDetails").textContent = "";
+    checkoutForm.reset();
+    updateDeliveryFields();
+    setOrderBusy(false);
   });
 }
 
@@ -1198,9 +1619,16 @@ setGeneralWhatsappLinks();
 setupMobileNav();
 setupCartModal();
 setupAddCartModal();
+setupCartPersistence();
 setupCheckout();
 renderDesignFilters();
 renderDesigns();
 renderCategoryFilters();
 renderProducts();
-renderCart();
+reconcileCart();
+
+const catalogRetryButton = document.querySelector("#catalogRetryButton");
+if (catalogRetryButton) catalogRetryButton.addEventListener("click", loadLocalCatalog);
+loadLocalCatalog();
+
+restoreOrderReference();

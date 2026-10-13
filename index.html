@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
+  <base href="/" />
+  <link rel="canonical" href="https://www.lumenpaper.com.ar/" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lumen Paper | Agendas, cuadernos y papelería personalizada</title>
@@ -116,6 +118,8 @@
             </p>
           </div>
 
+          <p id="catalogStatus" role="status" aria-live="polite">Preparando catálogo…</p>
+          <button class="button button-secondary" id="catalogRetryButton" type="button" hidden>Reintentar conexión</button>
           <div class="filters" id="categoryFilters" aria-label="Filtros por categoría"></div>
           <div class="products-grid" id="productsGrid" aria-live="polite"></div>
         </div>
@@ -176,7 +180,7 @@
             <h2>Cómo comprar</h2>
             <p>
               Comprar en Lumen Paper es simple: elegís el producto, armás tu carrito y
-              después enviás el pedido completo por WhatsApp.
+              después creás tu pedido. Por WhatsApp coordinamos los detalles y la entrega.
             </p>
           </div>
 
@@ -329,11 +333,12 @@
         </button>
         <div class="cart-modal-body">
           <div class="cart-modal-heading">
-            <p class="eyebrow">Pedido por WhatsApp</p>
+            <p class="eyebrow">Tu compra</p>
             <h2 id="cartModalTitle">Carrito</h2>
-            <p>Revisá tu pedido antes de enviarlo por WhatsApp.</p>
+            <p>Revisá tus productos y completá los datos para crear el pedido.</p>
           </div>
 
+          <p id="cartStatus" role="status" aria-live="polite"></p>
           <div class="cart-items" id="cartItems" aria-live="polite"></div>
           <div class="cart-summary" id="cartSummary">
             <p class="cart-total" id="cartTotal">Total general sin envío: $0</p>
@@ -348,24 +353,47 @@
             </div>
 
             <form class="checkout-form checkout-form-hidden" id="checkoutForm">
-              <h3>Datos para finalizar</h3>
-              <label>
-                Nombre
-                <input type="text" id="customerName" autocomplete="given-name" />
-              </label>
-              <label>
-                Apellido
-                <input type="text" id="customerLastName" autocomplete="family-name" />
-              </label>
-              <label>
-                Teléfono
-                <input type="tel" id="customerPhone" autocomplete="tel" />
-              </label>
-              <p class="form-message" id="checkoutMessage" aria-live="polite"></p>
-              <p class="checkout-note" id="checkoutNote" hidden>Podés consultar los dos diseños de interior disponibles al enviar el formulario de compra.</p>
-              <button class="button" type="submit">Enviar pedido por WhatsApp</button>
+              <h3>Datos para crear tu pedido</h3>
+              <fieldset id="checkoutFields" class="checkout-fields">
+                <label>Nombre<input type="text" id="customerName" autocomplete="given-name" required maxlength="100" /></label>
+                <label>Apellido<input type="text" id="customerLastName" autocomplete="family-name" required maxlength="100" /></label>
+                <label>DNI<input type="text" id="customerDni" inputmode="numeric" required maxlength="20" /></label>
+                <label>Teléfono<input type="tel" id="customerPhone" autocomplete="tel" required maxlength="40" /></label>
+                <label>Email<input type="email" id="customerEmail" autocomplete="email" required maxlength="254" /></label>
+                <label>Forma de entrega
+                  <select id="deliveryMethod" required>
+                    <option value="PICKUP">Retiro gratuito</option>
+                    <option value="CORREO_ARGENTINO">Envío por Correo Argentino</option>
+                  </select>
+                </label>
+                <p id="deliveryNote" class="checkout-note">El retiro no tiene costo. Coordinamos el punto de encuentro por WhatsApp.</p>
+                <fieldset id="shippingFields" class="checkout-fields" hidden disabled>
+                  <legend>Datos para el envío</legend>
+                  <label>Dirección<input type="text" id="shippingAddress" autocomplete="street-address" required maxlength="250" /></label>
+                  <label>Piso / departamento (opcional)<input type="text" id="shippingFloor" maxlength="100" /></label>
+                  <label>Código postal<input type="text" id="shippingPostalCode" autocomplete="postal-code" required maxlength="20" /></label>
+                  <label>Ciudad<input type="text" id="shippingCity" autocomplete="address-level2" required maxlength="120" /></label>
+                  <label>Provincia<input type="text" id="shippingProvince" autocomplete="address-level1" required maxlength="120" /></label>
+                </fieldset>
+                <p class="checkout-note">El total corresponde solo a los productos. El envío no está incluido: se cotiza y paga por separado.</p>
+                <p class="checkout-note" id="checkoutNote" hidden>Podés consultar los dos diseños de interior disponibles para el cuaderno pediátrico por WhatsApp.</p>
+                <button class="button" id="createOrderButton" type="submit">Crear pedido</button>
+              </fieldset>
             </form>
+            <p class="form-message" id="checkoutMessage" role="status" aria-live="polite"></p>
           </div>
+          <section class="cart-summary order-result" id="orderResult" hidden aria-labelledby="orderResultTitle">
+            <h3 id="orderResultTitle">Tu pedido</h3>
+            <p id="orderResultMessage" role="status" aria-live="polite"></p>
+            <div id="orderResultDetails"></div>
+            <button class="button" id="payOrderButton" type="button" disabled>Pagar con Mercado Pago</button>
+            <button class="button button-secondary" id="recoverCheckoutButton" type="button" hidden disabled>Recuperar enlace de pago</button>
+            <button class="button button-secondary" id="refreshOrderButton" type="button">Actualizar estado del pedido</button>
+            <p id="paymentMessage" class="form-message" role="status" aria-live="polite"></p>
+            <a class="button button-secondary" id="orderCoordinationWhatsapp" target="_blank" rel="noopener">Coordinar por WhatsApp</a>
+            <p class="checkout-note">Comenzar una compra nueva no cancela el pedido anterior ni inicia un pago.</p>
+            <button class="button button-secondary" id="newOrderButton" type="button">Comenzar una compra nueva</button>
+          </section>
         </div>
       </aside>
     </div>
@@ -376,6 +404,11 @@
 
     <script src="data/productos.js"></script>
     <script src="data/disenos.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/catalog.js"></script>
+    <script src="js/cart-storage.js"></script>
+    <script src="js/orders.js"></script>
     <script src="js/main.js"></script>
   </body>
 </html>
