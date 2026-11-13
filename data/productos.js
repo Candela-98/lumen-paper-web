@@ -331,9 +331,9 @@ const productos = [
     nombre: "Agenda Diaria",
     categoria: "Agendas",
     descripcion: "Agenda pensada para planificar cada día con claridad, calidez y espacio para tus prioridades.",
-    precio: "Desde $30.000",
+    precio: "Desde $35.000",
     preciosPorTamano: {
-      A5: 30000,
+      A5: 35000,
       B5: 35000
     },
     imagenPrincipal: "assets/img/agendas/agenda-diaria-1.png",
@@ -360,9 +360,9 @@ const productos = [
     nombre: "Agenda Docente",
     categoria: "Agendas",
     descripcion: "Agenda artesanal para docentes, ideal para organizar clases, planificaciones y seguimiento diario.",
-    precio: "$32.000",
+    precio: "$40.000",
     preciosPorTamano: {
-      A5: 32000
+      A5: 40000
     },
     imagenPrincipal: "assets/img/agendas/agenda-docente-1.png",
     imagenes: [
@@ -423,10 +423,10 @@ const productos = [
     nombre: "Cuaderno Personalizado",
     categoria: "Cuadernos",
     descripcion: "Cuaderno artesanal en tamaño A5, práctico para apuntes, ideas, estudios y proyectos.",
-    precio: "Desde $22.000",
+    precio: "Desde $26.000",
     preciosPorTamano: {
-      A5: 22000,
-      B5: 26000
+      A5: 26000,
+      B5: 30000
     },
     imagenPrincipal: "assets/img/cuadernos/cuaderno-A5-1.png",
     imagenes: [
