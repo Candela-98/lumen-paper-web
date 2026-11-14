@@ -40,7 +40,7 @@ const detalleAgendaDocente = {
     "Espacios para organizar clases y actividades"
   ],
   medidas: [
-    "Tamaño A5: 15 x 21 cm aprox.",
+    "Tamaño B5: 18,2 x 25,7 cm aprox.",
     "Encuadernación con espiral/anillado",
     "Tapa personalizada",
     "Interior pensado para organización docente"
@@ -334,7 +334,7 @@ const productos = [
     precio: "Desde $35.000",
     preciosPorTamano: {
       A5: 35000,
-      B5: 35000
+      B5: 40000
     },
     imagenPrincipal: "assets/img/agendas/agenda-diaria-1.png",
     imagenes: [
@@ -355,14 +355,14 @@ const productos = [
     id: "agenda-docente",
     backendSlug: "agenda-docente",
     skuPorTamano: {
-      A5: "AGENDA-DOCENTE-UNICA"
+      B5: "AGENDA-DOCENTE-UNICA"
     },
     nombre: "Agenda Docente",
     categoria: "Agendas",
     descripcion: "Agenda artesanal para docentes, ideal para organizar clases, planificaciones y seguimiento diario.",
-    precio: "$40.000",
+    precio: "$43.000",
     preciosPorTamano: {
-      A5: 40000
+      B5: 43000
     },
     imagenPrincipal: "assets/img/agendas/agenda-docente-1.png",
     imagenes: [
